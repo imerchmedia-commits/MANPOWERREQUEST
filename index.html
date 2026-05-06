@@ -20,9 +20,9 @@
 <body class="bg-gray-100 p-4">
 
     <div class="mrf-container shadow-2xl">
-        <!-- ADJUSTED LOGO SIZE -->
-        <div class="flex justify-center mb-4 bg-black p-3 rounded">
-            <img src="imerch_new_logo.png" alt="iMerch Media Logo" class="h-16 w-auto object-contain">
+        <!-- FIXED LOGO SECTION (NO BLACK BG) -->
+        <div class="flex justify-center mb-4 p-3">
+            <img src="logo1.jpg" alt="iMerch Media Logo" class="h-16 w-auto object-contain">
         </div>
 
         <div class="text-center mb-4">
@@ -45,7 +45,7 @@
                     <label class="font-bold block mt-1">Date Vacant:</label><input type="date" name="date_vacant" class="w-full">
                 </div>
 
-                <!-- REASON FOR REQUEST -->
+                <!-- REASON FOR REQUEST SECTION -->
                 <div class="p-2 col-span-3 border-t border-black">
                     <div class="flex items-start space-x-4">
                         <label class="font-bold whitespace-nowrap">Reason for Request:</label>
@@ -56,24 +56,19 @@
                         <div class="flex-1 space-y-1">
                             <div class="flex items-center space-x-2"><span class="text-[10px] italic">IF RELIEVER, WHO & WHY?</span><input type="text" name="reliever_reason" class="w-full"></div>
                             <div class="flex items-center space-x-2"><span class="text-[10px] italic">IF RESIGNED, ATTACH RESIGNATION LETTER/CLEARANCE:</span><input type="text" name="resignation_details" class="w-full"></div>
-                            <div class="flex items-center space-x-2"><span class="text-[10px] italic text-wrap">IF ADDITIONAL EMPLOYEE, NEW OUTLET OR NEW ACCOUNT?</span><input type="text" name="additional_details" class="w-full"></div>
+                            <div class="flex items-center space-x-2"><span class="text-[10px] italic">IF ADDITIONAL EMPLOYEE, NEW OUTLET OR NEW ACCOUNT?</span><input type="text" name="additional_details" class="w-full"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- TYPE OF EMPLOYMENT & EDUCATION -->
             <div class="section-header">Type of Employment</div>
             <div class="grid-box grid grid-cols-4 p-2 text-center">
                 <label><input type="checkbox" name="emp_type" value="Regular"> Regular</label>
                 <label><input type="checkbox" name="emp_type" value="Probationary"> Probationary</label>
                 <label><input type="checkbox" name="emp_type" value="Project"> Project</label>
                 <label><input type="checkbox" name="emp_type" value="Fixed-Term"> Fixed-Term</label>
-            </div>
-
-            <div class="grid-box p-2 flex items-center space-x-10">
-                <span class="font-bold">Duration:</span>
-                <div class="flex items-center space-x-2"><label>Start:</label><input type="date" name="duration_start"></div>
-                <div class="flex items-center space-x-2"><label>End:</label><input type="date" name="duration_end"></div>
             </div>
 
             <div class="section-header">Educational Attainment</div>
@@ -90,7 +85,7 @@
                 <div class="p-2"><label class="font-bold">Course Taken:</label><input type="text" name="course_taken" class="w-full"></div>
             </div>
 
-            <!-- BUDGETED COMPENSATION PACKAGE -->
+            <!-- BUDGETED COMPENSATION PACKAGE SECTION -->
             <div class="section-header">Budgeted Compensation Package</div>
             <div class="grid-box grid grid-cols-2">
                 <div class="p-2 border-right border-bottom">
@@ -181,7 +176,7 @@
         const db = getFirestore(app);
         window.padSup = new SignaturePad(document.getElementById('sig-supervisor'));
 
-        // Auto-calculator
+        // Auto-calculator for Budgeted Package
         document.querySelectorAll('.calc').forEach(input => {
             input.addEventListener('input', () => {
                 const b = parseFloat(document.getElementById('basic').value) || 0;
