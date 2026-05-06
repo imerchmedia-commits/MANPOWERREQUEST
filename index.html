@@ -81,16 +81,24 @@
             padding: 10px;
         }
 
-        /* PRINT STYLES */
+        /* PRINT STYLES - CRITICAL FIX[cite: 1] */
         @media print {
-            body * { visibility: hidden; }
-            #print-area, #print-area * { visibility: visible; }
-            #print-area { position: absolute; left: 0; top: 0; width: 100%; }
+            body > *:not(#print-area) { 
+                display: none !important; 
+            }
+            #print-area { 
+                display: block !important; 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+            }
         }
     </style>
 </head>
 <body class="bg-slate-100 flex h-screen overflow-hidden">
 
+    <!-- SIDEBAR[cite: 1] -->
     <aside class="w-80 bg-slate-900 text-white flex flex-col shadow-2xl shrink-0">
         <div class="p-10 border-b border-slate-800 text-center">
             <img src="logo1.png" alt="iMerch Logo" class="h-14 mx-auto mb-4 object-contain">
@@ -121,7 +129,7 @@
 
     <main class="flex-1 overflow-y-auto p-12 bg-[#f8fafc]">
         
-        <!-- DASHBOARD SECTION -->
+        <!-- DASHBOARD SECTION[cite: 1] -->
         <section id="section-dashboard" class="content-section active">
             <div class="flex justify-between items-end mb-10 border-b pb-6">
                 <div>
@@ -159,7 +167,7 @@
             </div>
         </section>
 
-        <!-- MRF FORM SECTION -->
+        <!-- MRF FORM SECTION[cite: 1] -->
         <section id="section-mrf" class="content-section">
             <div class="mrf-container shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
                 <div class="text-center mb-8">
@@ -170,7 +178,7 @@
                 </div>
 
                 <form id="mrfForm" class="text-[13px] space-y-0">
-                    <!-- BOX 1: JOB SPECS -->
+                    <!-- BOX 1: JOB SPECS[cite: 1] -->
                     <div class="grid-box grid grid-cols-3">
                         <div class="p-4 border-right border-bottom bg-slate-50/50">
                             <label class="font-black block text-[10px] text-blue-900 mb-1 uppercase">No. of Vacancies:</label>
@@ -207,7 +215,7 @@
                         </div>
                     </div>
 
-                    <!-- BOX 2: EMPLOYMENT TYPE -->
+                    <!-- BOX 2: EMPLOYMENT TYPE[cite: 1] -->
                     <div class="section-header">Type of Employment</div>
                     <div class="grid-box">
                         <div class="grid grid-cols-4 p-5 text-center font-black text-[11px] bg-white">
@@ -227,7 +235,7 @@
                         </div>
                     </div>
 
-                    <!-- BOX 3: EDUCATIONAL ATTAINMENT -->
+                    <!-- BOX 3: EDUCATIONAL ATTAINMENT[cite: 1] -->
                     <div class="section-header">Educational Attainment</div>
                     <div class="grid-box">
                         <div class="grid grid-cols-3 p-5 text-center border-bottom font-black text-[11px]">
@@ -247,7 +255,7 @@
                         </div>
                     </div>
 
-                    <!-- BOX 4: COMPENSATION CALCULATOR -->
+                    <!-- BOX 4: COMPENSATION CALCULATOR[cite: 1] -->
                     <div class="section-header">Budgeted Compensation Package</div>
                     <div class="grid-box grid grid-cols-2">
                         <div class="p-6 border-right border-bottom bg-white">
@@ -284,7 +292,7 @@
                         </div>
                     </div>
 
-                    <!-- BOX 5: APPROVAL ROUTING -->
+                    <!-- BOX 5: APPROVAL ROUTING[cite: 1] -->
                     <div class="bg-blue-900 p-8 border-2 border-black mt-10 rounded-xl shadow-2xl">
                         <h3 class="text-center font-black text-white uppercase mb-8 text-sm tracking-[0.4em]">Approval Workflow Routing</h3>
                         <div class="grid grid-cols-2 gap-8">
@@ -336,7 +344,7 @@
         </section>
     </main>
 
-    <!-- HIDDEN PRINT AREA -->
+    <!-- HIDDEN PRINT AREA[cite: 1] -->
     <div id="print-area" class="hidden"></div>
 
     <script type="module">
@@ -362,7 +370,7 @@
             document.getElementById('nav-' + id).classList.add('active-link');
         };
 
-        // DASHBOARD REAL-TIME SYNC
+        // DASHBOARD REAL-TIME SYNC[cite: 1]
         const q = query(collection(db, "mrf_requests"), orderBy("submittedAt", "desc"));
         onSnapshot(q, (snapshot) => {
             const tbody = document.getElementById('pending-table-body');
@@ -398,7 +406,7 @@
             });
         });
 
-        // PRINT FUNCTION LOGIC (THE "printmrf" UPDATE)
+        // PRINT FUNCTION LOGIC - ENHANCED VERSION[cite: 1]
         window.printMRF = async (docId) => {
             const docRef = doc(db, "mrf_requests", docId);
             const docSnap = await getDoc(docRef);
@@ -407,49 +415,62 @@
             const d = docSnap.data();
 
             const printArea = document.getElementById('print-area');
+            
+            // Injected HTML with detailed inline styles for print accuracy
             printArea.innerHTML = `
-                <div class="mrf-container" style="border: 2px solid #000; padding: 30px; font-family: sans-serif;">
-                    <div style="text-align: center;">
-                        <img src="logo1.png" style="height: 60px;">
-                        <p style="font-size: 10px; font-weight: bold; margin-top: 5px;">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
-                        <h1 style="background: #000; color: #fff; padding: 10px; font-size: 20px; margin-top: 10px; text-transform: uppercase;">Manpower Request Form</h1>
+                <div style="width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; color: black !important; background: white;">
+                    <div style="text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 20px;">
+                        <img src="logo1.png" style="height: 70px; margin-bottom: 10px;">
+                        <p style="font-size: 11px; font-weight: bold; margin: 0; text-transform: uppercase;">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
+                        <h1 style="background: #111827; color: white; padding: 12px; font-size: 22px; margin-top: 15px; text-transform: uppercase;">Manpower Request Form</h1>
                     </div>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px;">
+
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                         <tr>
-                            <td style="border: 1px solid #000; padding: 10px; width: 33%;"><strong>VACANCIES:</strong><br>${d.vacancies}</td>
-                            <td style="border: 1px solid #000; padding: 10px; width: 33%;"><strong>POSITION:</strong><br>${d.position}</td>
-                            <td style="border: 1px solid #000; padding: 10px; width: 33%;"><strong>DEPARTMENT:</strong><br>${d.department}</td>
+                            <td style="border: 1px solid black; padding: 12px; width: 20%;"><strong>VACANCIES:</strong><br>${d.vacancies || 'N/A'}</td>
+                            <td style="border: 1px solid black; padding: 12px; width: 40%;"><strong>POSITION TITLE:</strong><br>${d.position || 'N/A'}</td>
+                            <td style="border: 1px solid black; padding: 12px; width: 40%;"><strong>DEPARTMENT:</strong><br>${d.department || 'N/A'}</td>
                         </tr>
                         <tr>
-                            <td style="border: 1px solid #000; padding: 10px;"><strong>REASON:</strong><br>${d.reason || 'N/A'}</td>
-                            <td style="border: 1px solid #000; padding: 10px;"><strong>EMP TYPE:</strong><br>${d.emp_type || 'N/A'}</td>
-                            <td style="border: 1px solid #000; padding: 10px;"><strong>DURATION:</strong><br>${d.start_date} to ${d.end_date}</td>
-                        </tr>
-                         <tr>
-                            <td colspan="2" style="border: 1px solid #000; padding: 10px;"><strong>EDUCATIONAL ATTAINMENT:</strong><br>${d.educ} (${d.grad_status}) - ${d.course}</td>
-                            <td style="border: 1px solid #000; padding: 10px;"><strong>BUDGETED PKG:</strong><br>${d.total_package}</td>
+                            <td style="border: 1px solid black; padding: 12px;"><strong>REASON:</strong><br>${d.reason || 'N/A'}</td>
+                            <td style="border: 1px solid black; padding: 12px;"><strong>EMPLOYMENT TYPE:</strong><br>${d.emp_type || 'N/A'}</td>
+                            <td style="border: 1px solid black; padding: 12px;"><strong>DURATION:</strong><br>${d.start_date || '---'} to ${d.end_date || '---'}</td>
                         </tr>
                     </table>
-                    
-                    <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div style="border: 1px solid #000; padding: 10px; text-align: center;">
-                            <p style="font-size: 9px;">REQUESTED BY:</p>
-                            <img src="${d.sig_supervisor}" style="height: 50px;">
-                            <p style="border-top: 1px solid #000; font-weight: bold;">${d.supervisor_email}</p>
+
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                        <tr>
+                            <td style="border: 1px solid black; padding: 12px; width: 60%;"><strong>EDUCATIONAL ATTAINMENT:</strong><br>${d.educ || ''} (${d.grad_status || ''}) - ${d.course || 'N/A'}</td>
+                            <td style="border: 1px solid black; padding: 12px; width: 40%;"><strong>GROSS PACKAGE:</strong><br><span style="font-size: 18px; font-weight: bold;">${d.total_package || '₱ 0.00'}</span></td>
+                        </tr>
+                    </table>
+
+                    <div style="margin-top: 40px; display: flex; justify-content: space-between;">
+                        <div style="width: 45%; text-align: center; border: 1px solid #ccc; padding: 10px;">
+                            <p style="font-size: 10px; margin-bottom: 5px;">REQUESTED BY (SUPERVISOR):</p>
+                            <img src="${d.sig_supervisor}" style="height: 60px; display: block; margin: 0 auto;">
+                            <p style="border-top: 1px solid black; font-weight: bold; margin-top: 5px; font-size: 12px;">${d.supervisor_email}</p>
                         </div>
-                        <div style="border: 1px solid #000; padding: 10px; text-align: center;">
-                            <p style="font-size: 9px;">APPROVED BY:</p>
-                            <div style="height: 50px; display: flex; align-items: center; justify-content: center; font-style: italic;">e-Signed via MD Portal</div>
-                            <p style="border-top: 1px solid #000; font-weight: bold;">GLENN (MANAGING DIRECTOR)</p>
+                        <div style="width: 45%; text-align: center; border: 1px solid #ccc; padding: 10px;">
+                            <p style="font-size: 10px; margin-bottom: 5px;">APPROVED BY (MANAGING DIRECTOR):</p>
+                            <div style="height: 60px; display: flex; align-items: center; justify-content: center; font-style: italic; color: blue;">e-Signed via Portal</div>
+                            <p style="border-top: 1px solid black; font-weight: bold; margin-top: 5px; font-size: 12px;">GLENN CANTOS</p>
                         </div>
+                    </div>
+
+                    <div style="margin-top: 30px; font-size: 9px; color: gray; text-align: right;">
+                        Record ID: ${docId} | Timestamp: ${new Date().toLocaleString()}
                     </div>
                 </div>
             `;
-            
-            window.print();
+
+            // Micro-delay to ensure data is rendered before opening the print dialog
+            setTimeout(() => {
+                window.print();
+            }, 500);
         };
 
-        // APPROVAL CYCLE LOGIC
+        // APPROVAL CYCLE LOGIC[cite: 1]
         window.approveCycleStep = async (docId, currentStatus) => {
             const pin = prompt(`APPROVING STEP: ${currentStatus}\nEnter Authorization Key:`);
             if (pin !== "1234") return alert("Unauthorized Key.");
@@ -477,11 +498,11 @@
             } catch (err) { alert("UPDATE FAILED: " + err.message); }
         };
 
-        // SIGNATURE PAD INITIALIZATION
+        // SIGNATURE PAD INITIALIZATION[cite: 1]
         const canvas = document.getElementById('sig-supervisor');
         window.padSup = new SignaturePad(canvas);
 
-        // REAL-TIME BUDGET CALCULATOR
+        // REAL-TIME BUDGET CALCULATOR[cite: 1]
         const calculateTotal = () => {
             const basic = parseFloat(document.getElementById('basic').value) || 0;
             const meal = parseFloat(document.getElementsByName('meal')[0].value) || 0;
@@ -497,7 +518,7 @@
             input.addEventListener('input', calculateTotal);
         });
 
-        // FORM SUBMISSION
+        // FORM SUBMISSION[cite: 1]
         document.getElementById('mrfForm').onsubmit = async (e) => {
             e.preventDefault();
             if (padSup.isEmpty()) return alert("Please provide supervisor signature.");
