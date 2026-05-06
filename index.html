@@ -81,7 +81,7 @@
             padding: 10px;
         }
 
-        /* PRINT STYLES - CRITICAL FIX[cite: 1] */
+        /* PRINT STYLES */
         @media print {
             body > *:not(#print-area) { 
                 display: none !important; 
@@ -93,12 +93,15 @@
                 top: 0; 
                 width: 100%; 
             }
+            .print-table { width: 100%; border-collapse: collapse; }
+            .print-table td, .print-table th { border: 1px solid black; padding: 8px; font-size: 12px; }
+            .print-header { background: #111827 !important; color: white !important; -webkit-print-color-adjust: exact; }
         }
     </style>
 </head>
 <body class="bg-slate-100 flex h-screen overflow-hidden">
 
-    <!-- SIDEBAR[cite: 1] -->
+    <!-- SIDEBAR -->
     <aside class="w-80 bg-slate-900 text-white flex flex-col shadow-2xl shrink-0">
         <div class="p-10 border-b border-slate-800 text-center">
             <img src="logo1.png" alt="iMerch Logo" class="h-14 mx-auto mb-4 object-contain">
@@ -129,7 +132,7 @@
 
     <main class="flex-1 overflow-y-auto p-12 bg-[#f8fafc]">
         
-        <!-- DASHBOARD SECTION[cite: 1] -->
+        <!-- DASHBOARD SECTION -->
         <section id="section-dashboard" class="content-section active">
             <div class="flex justify-between items-end mb-10 border-b pb-6">
                 <div>
@@ -167,7 +170,7 @@
             </div>
         </section>
 
-        <!-- MRF FORM SECTION[cite: 1] -->
+        <!-- MRF FORM SECTION -->
         <section id="section-mrf" class="content-section">
             <div class="mrf-container shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
                 <div class="text-center mb-8">
@@ -178,7 +181,7 @@
                 </div>
 
                 <form id="mrfForm" class="text-[13px] space-y-0">
-                    <!-- BOX 1: JOB SPECS[cite: 1] -->
+                    <!-- BOX 1: JOB SPECS -->
                     <div class="grid-box grid grid-cols-3">
                         <div class="p-4 border-right border-bottom bg-slate-50/50">
                             <label class="font-black block text-[10px] text-blue-900 mb-1 uppercase">No. of Vacancies:</label>
@@ -215,7 +218,7 @@
                         </div>
                     </div>
 
-                    <!-- BOX 2: EMPLOYMENT TYPE[cite: 1] -->
+                    <!-- BOX 2: EMPLOYMENT TYPE -->
                     <div class="section-header">Type of Employment</div>
                     <div class="grid-box">
                         <div class="grid grid-cols-4 p-5 text-center font-black text-[11px] bg-white">
@@ -235,7 +238,7 @@
                         </div>
                     </div>
 
-                    <!-- BOX 3: EDUCATIONAL ATTAINMENT[cite: 1] -->
+                    <!-- BOX 3: EDUCATIONAL ATTAINMENT -->
                     <div class="section-header">Educational Attainment</div>
                     <div class="grid-box">
                         <div class="grid grid-cols-3 p-5 text-center border-bottom font-black text-[11px]">
@@ -255,7 +258,7 @@
                         </div>
                     </div>
 
-                    <!-- BOX 4: COMPENSATION CALCULATOR[cite: 1] -->
+                    <!-- BOX 4: COMPENSATION CALCULATOR -->
                     <div class="section-header">Budgeted Compensation Package</div>
                     <div class="grid-box grid grid-cols-2">
                         <div class="p-6 border-right border-bottom bg-white">
@@ -292,7 +295,7 @@
                         </div>
                     </div>
 
-                    <!-- BOX 5: APPROVAL ROUTING[cite: 1] -->
+                    <!-- BOX 5: APPROVAL ROUTING -->
                     <div class="bg-blue-900 p-8 border-2 border-black mt-10 rounded-xl shadow-2xl">
                         <h3 class="text-center font-black text-white uppercase mb-8 text-sm tracking-[0.4em]">Approval Workflow Routing</h3>
                         <div class="grid grid-cols-2 gap-8">
@@ -304,6 +307,7 @@
                                     <option value="julie.jalandon@imerchmedia.net">Julie Jalandon</option>
                                     <option value="gladys.deguzman@imerchmedia.net">Gladys Deguzman</option>
                                     <option value="jerome.ore@imerchmedia.net">Jerome Ore</option>
+                                    <option value="chris.cantos@imerchmedia.com">Christopher Cantos</option>
                                 </select>
                                 <div class="relative">
                                     <canvas id="sig-supervisor"></canvas>
@@ -314,7 +318,7 @@
                             <div class="bg-white p-6 border-2 border-blue-200 rounded-lg shadow-lg">
                                 <label class="font-black text-[11px] text-blue-900 block mb-3 border-b-2 border-blue-100 pb-2">2. NOTED BY (DEPT. HEAD):</label>
                                 <select name="dept_head_email" id="dept_head_email" class="w-full font-black p-2 bg-blue-50 mb-4 rounded border-none">
-                                    <option value="chris.cantos@imerchmedia.com">Chris Cantos</option>
+                                    <option value="chris.cantos@imerchmedia.com">Christopher Cantos</option>
                                     <option value="vicky@imerchmedia.com">Vicky Carlos</option>
                                     <option value="jobey@imerchmedia.com">Jobey Hernandez</option>
                                 </select>
@@ -344,7 +348,7 @@
         </section>
     </main>
 
-    <!-- HIDDEN PRINT AREA[cite: 1] -->
+    <!-- HIDDEN PRINT AREA -->
     <div id="print-area" class="hidden"></div>
 
     <script type="module">
@@ -370,7 +374,7 @@
             document.getElementById('nav-' + id).classList.add('active-link');
         };
 
-        // DASHBOARD REAL-TIME SYNC[cite: 1]
+        // DASHBOARD REAL-TIME SYNC
         const q = query(collection(db, "mrf_requests"), orderBy("submittedAt", "desc"));
         onSnapshot(q, (snapshot) => {
             const tbody = document.getElementById('pending-table-body');
@@ -406,7 +410,7 @@
             });
         });
 
-        // PRINT FUNCTION LOGIC - ENHANCED VERSION[cite: 1]
+        // PRINT FUNCTION LOGIC - FULL FORM VERSION
         window.printMRF = async (docId) => {
             const docRef = doc(db, "mrf_requests", docId);
             const docSnap = await getDoc(docRef);
@@ -416,61 +420,92 @@
 
             const printArea = document.getElementById('print-area');
             
-            // Injected HTML with detailed inline styles for print accuracy
             printArea.innerHTML = `
-                <div style="width: 800px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif; color: black !important; background: white;">
+                <div style="width: 850px; margin: 0 auto; padding: 20px; color: black; background: white;">
                     <div style="text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 20px;">
-                        <img src="logo1.png" style="height: 70px; margin-bottom: 10px;">
-                        <p style="font-size: 11px; font-weight: bold; margin: 0; text-transform: uppercase;">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
-                        <h1 style="background: #111827; color: white; padding: 12px; font-size: 22px; margin-top: 15px; text-transform: uppercase;">Manpower Request Form</h1>
+                        <img src="logo1.png" style="height: 60px; margin-bottom: 10px;">
+                        <p style="font-size: 10px; font-weight: bold; margin: 0;">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
+                        <h1 style="background: #111827; color: white; padding: 10px; font-size: 20px; margin-top: 10px; text-transform: uppercase;">Manpower Request Form</h1>
                     </div>
 
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                    <table class="print-table">
                         <tr>
-                            <td style="border: 1px solid black; padding: 12px; width: 20%;"><strong>VACANCIES:</strong><br>${d.vacancies || 'N/A'}</td>
-                            <td style="border: 1px solid black; padding: 12px; width: 40%;"><strong>POSITION TITLE:</strong><br>${d.position || 'N/A'}</td>
-                            <td style="border: 1px solid black; padding: 12px; width: 40%;"><strong>DEPARTMENT:</strong><br>${d.department || 'N/A'}</td>
+                            <td colspan="1"><strong>VACANCIES:</strong><br>${d.vacancies || ''}</td>
+                            <td colspan="2"><strong>JOB POSITION:</strong><br>${d.position || ''}</td>
+                            <td colspan="1"><strong>DEPARTMENT:</strong><br>${d.department || ''}</td>
                         </tr>
                         <tr>
-                            <td style="border: 1px solid black; padding: 12px;"><strong>REASON:</strong><br>${d.reason || 'N/A'}</td>
-                            <td style="border: 1px solid black; padding: 12px;"><strong>EMPLOYMENT TYPE:</strong><br>${d.emp_type || 'N/A'}</td>
-                            <td style="border: 1px solid black; padding: 12px;"><strong>DURATION:</strong><br>${d.start_date || '---'} to ${d.end_date || '---'}</td>
+                            <td><strong>APPROVED MP:</strong><br>${d.approved_mp || ''}</td>
+                            <td><strong>PRESENT MP:</strong><br>${d.present_mp || ''}</td>
+                            <td><strong>REPLACEMENT OF:</strong><br>${d.replacement_of || ''}</td>
+                            <td><strong>DATE VACANT:</strong><br>${d.date_vacant || ''}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"><strong>REASON FOR REQUEST:</strong> ${d.reason || ''}</td>
+                        </tr>
+                        <tr class="print-header"><th colspan="4" style="text-align: center; color: white;">TYPE OF EMPLOYMENT</th></tr>
+                        <tr>
+                            <td colspan="2"><strong>EMPLOYMENT TYPE:</strong><br>${d.emp_type || ''}</td>
+                            <td colspan="2"><strong>DURATION:</strong><br>START: ${d.start_date || '---'} | END: ${d.end_date || '---'}</td>
+                        </tr>
+                        <tr class="print-header"><th colspan="4" style="text-align: center; color: white;">EDUCATIONAL ATTAINMENT</th></tr>
+                        <tr>
+                            <td colspan="2"><strong>LEVEL:</strong> ${d.educ || ''} (${d.grad_status || ''})</td>
+                            <td colspan="2"><strong>COURSE:</strong> ${d.course || ''}</td>
+                        </tr>
+                        <tr class="print-header"><th colspan="4" style="text-align: center; color: white;">BUDGETED COMPENSATION PACKAGE</th></tr>
+                        <tr>
+                            <td><strong>BASIC SALARY:</strong><br>₱ ${d.basic || '0.00'}</td>
+                            <td><strong>CHARGE TO:</strong><br>${d.charge || ''}</td>
+                            <td colspan="2" rowspan="2">
+                                <strong>REIMBURSABLE EXPENSES:</strong><br>
+                                MEAL: ${d.meal || '0'} | TRANSPO: ${d.transpo || '0'}<br>
+                                COMM: ${d.comm || '0'} | INTERNET: ${d.internet || '0'}
+                                <div style="margin-top: 10px; font-size: 16px; font-weight: bold; border-top: 1px solid black;">GROSS TOTAL: ${d.total_package || '₱ 0.00'}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>MCE NO:</strong><br>${d.mce || ''}</td>
+                            <td><strong>BUDGET:</strong><br>${d.budget || ''}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"><strong>SPECIAL TRAININGS:</strong><br>${d.trainings || ''}</td>
                         </tr>
                     </table>
 
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
-                        <tr>
-                            <td style="border: 1px solid black; padding: 12px; width: 60%;"><strong>EDUCATIONAL ATTAINMENT:</strong><br>${d.educ || ''} (${d.grad_status || ''}) - ${d.course || 'N/A'}</td>
-                            <td style="border: 1px solid black; padding: 12px; width: 40%;"><strong>GROSS PACKAGE:</strong><br><span style="font-size: 18px; font-weight: bold;">${d.total_package || '₱ 0.00'}</span></td>
-                        </tr>
-                    </table>
-
-                    <div style="margin-top: 40px; display: flex; justify-content: space-between;">
-                        <div style="width: 45%; text-align: center; border: 1px solid #ccc; padding: 10px;">
-                            <p style="font-size: 10px; margin-bottom: 5px;">REQUESTED BY (SUPERVISOR):</p>
-                            <img src="${d.sig_supervisor}" style="height: 60px; display: block; margin: 0 auto;">
-                            <p style="border-top: 1px solid black; font-weight: bold; margin-top: 5px; font-size: 12px;">${d.supervisor_email}</p>
+                    <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div style="border: 1px solid black; padding: 10px; text-align: center;">
+                            <p style="font-size: 10px; margin: 0;">1. REQUESTED BY (SUPERVISOR)</p>
+                            <img src="${d.sig_supervisor}" style="height: 50px; margin: 5px auto; display: block;">
+                            <p style="font-weight: bold; border-top: 1px solid black; display: inline-block; padding: 0 10px;">${d.supervisor_email}</p>
                         </div>
-                        <div style="width: 45%; text-align: center; border: 1px solid #ccc; padding: 10px;">
-                            <p style="font-size: 10px; margin-bottom: 5px;">APPROVED BY (MANAGING DIRECTOR):</p>
-                            <div style="height: 60px; display: flex; align-items: center; justify-content: center; font-style: italic; color: blue;">e-Signed via Portal</div>
-                            <p style="border-top: 1px solid black; font-weight: bold; margin-top: 5px; font-size: 12px;">GLENN CANTOS</p>
+                        <div style="border: 1px solid black; padding: 10px; text-align: center;">
+                            <p style="font-size: 10px; margin: 0;">2. NOTED BY (DEPT. HEAD)</p>
+                            <div style="height: 50px; font-style: italic; line-height: 50px; color: blue;">e-Signed via Portal</div>
+                            <p style="font-weight: bold; border-top: 1px solid black; display: inline-block; padding: 0 10px;">CHRISTHOPER CANTOS</p>
+                        </div>
+                        <div style="border: 1px solid black; padding: 10px; text-align: center;">
+                            <p style="font-size: 10px; margin: 0;">3. BUDGET VERIFIED (FINANCE)</p>
+                            <div style="height: 50px; font-style: italic; line-height: 50px; color: green;">Verified via Dashboard</div>
+                            <p style="font-weight: bold; border-top: 1px solid black; display: inline-block; padding: 0 10px;">TERESITA LUMANIOG</p>
+                        </div>
+                        <div style="border: 1px solid black; padding: 10px; text-align: center;">
+                            <p style="font-size: 10px; margin: 0;">4. APPROVED BY (MANAGING DIRECTOR)</p>
+                            <div style="height: 50px; font-style: italic; line-height: 50px; color: red;">Final Approval Logged</div>
+                            <p style="font-weight: bold; border-top: 1px solid black; display: inline-block; padding: 0 10px;">GLENN HERNANDEZ</p>
                         </div>
                     </div>
 
-                    <div style="margin-top: 30px; font-size: 9px; color: gray; text-align: right;">
-                        Record ID: ${docId} | Timestamp: ${new Date().toLocaleString()}
+                    <div style="margin-top: 20px; font-size: 9px; color: gray; text-align: left;">
+                        System Generated Record: ${docId} | Timestamp: ${new Date().toLocaleString()}
                     </div>
                 </div>
             `;
 
-            // Micro-delay to ensure data is rendered before opening the print dialog
-            setTimeout(() => {
-                window.print();
-            }, 500);
+            setTimeout(() => { window.print(); }, 500);
         };
 
-        // APPROVAL CYCLE LOGIC[cite: 1]
+        // APPROVAL CYCLE LOGIC
         window.approveCycleStep = async (docId, currentStatus) => {
             const pin = prompt(`APPROVING STEP: ${currentStatus}\nEnter Authorization Key:`);
             if (pin !== "1234") return alert("Unauthorized Key.");
@@ -498,11 +533,11 @@
             } catch (err) { alert("UPDATE FAILED: " + err.message); }
         };
 
-        // SIGNATURE PAD INITIALIZATION[cite: 1]
+        // SIGNATURE PAD INITIALIZATION
         const canvas = document.getElementById('sig-supervisor');
         window.padSup = new SignaturePad(canvas);
 
-        // REAL-TIME BUDGET CALCULATOR[cite: 1]
+        // REAL-TIME BUDGET CALCULATOR
         const calculateTotal = () => {
             const basic = parseFloat(document.getElementById('basic').value) || 0;
             const meal = parseFloat(document.getElementsByName('meal')[0].value) || 0;
@@ -518,7 +553,7 @@
             input.addEventListener('input', calculateTotal);
         });
 
-        // FORM SUBMISSION[cite: 1]
+        // FORM SUBMISSION
         document.getElementById('mrfForm').onsubmit = async (e) => {
             e.preventDefault();
             if (padSup.isEmpty()) return alert("Please provide supervisor signature.");
@@ -531,6 +566,7 @@
             data.emp_type = Array.from(document.querySelectorAll('input[name="emp_type"]:checked')).map(cb => cb.value).join(', ');
             data.educ = Array.from(document.querySelectorAll('input[name="educ"]:checked')).map(cb => cb.value).join(', ');
             data.grad_status = Array.from(document.querySelectorAll('input[name="grad_status"]:checked')).map(cb => cb.value).join(', ');
+            data.charge = Array.from(document.querySelectorAll('input[name="charge"]:checked')).map(cb => cb.value).join(', ');
 
             data.sig_supervisor = padSup.toDataURL();
             data.status = "WAITING_DEPT_HEAD";
