@@ -267,10 +267,10 @@
                         <div class="p-6 border-right bg-white">
                             <label class="italic font-black text-[11px] text-blue-800 uppercase tracking-tighter mb-4 block">Reimbursable Operational Expenses:</label>
                             <div class="grid grid-cols-2 gap-6">
-                                <div><span class="text-[10px] font-bold block mb-1">MEAL:</span><input type="number" id="meal" name="meal" class="calc font-bold"></div>
-                                <div><span class="text-[10px] font-bold block mb-1">TRANSPO:</span><input type="number" id="transpo" name="transpo" class="calc font-bold"></div>
-                                <div><span class="text-[10px] font-bold block mb-1">COMM:</span><input type="number" id="comm" name="comm" class="calc font-bold"></div>
-                                <div><span class="text-[10px] font-bold block mb-1">INTERNET:</span><input type="number" id="internet" name="internet" class="calc font-bold"></div>
+                                <div><span class="text-[10px] font-bold block mb-1">MEAL:</span><input type="number" name="meal" class="calc font-bold" placeholder="0"></div>
+                                <div><span class="text-[10px] font-bold block mb-1">TRANSPO:</span><input type="number" name="transpo" class="calc font-bold" placeholder="0"></div>
+                                <div><span class="text-[10px] font-bold block mb-1">COMM:</span><input type="number" name="comm" class="calc font-bold" placeholder="0"></div>
+                                <div><span class="text-[10px] font-bold block mb-1">INTERNET:</span><input type="number" name="internet" class="calc font-bold" placeholder="0"></div>
                             </div>
                             <div class="mt-8 p-5 bg-red-600 rounded shadow-inner flex justify-between items-center text-white">
                                 <span class="font-black text-sm tracking-[0.2em]">GROSS TOTAL:</span>
@@ -362,7 +362,7 @@
             document.getElementById('nav-' + id).classList.add('active-link');
         };
 
-        // DASHBOARD REAL-TIME SYNC WITH PRINT BUTTON LOGIC
+        // DASHBOARD REAL-TIME SYNC
         const q = query(collection(db, "mrf_requests"), orderBy("submittedAt", "desc"));
         onSnapshot(q, (snapshot) => {
             const tbody = document.getElementById('pending-table-body');
@@ -379,10 +379,9 @@
                 const isApproved = data.status === "FULLY_APPROVED";
                 const statusColor = isApproved ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800";
                 
-                // PRINT BUTTON APPEARS ONLY IF FULLY_APPROVED
                 const actionButton = isApproved 
-                    ? `<button onclick="printMRF('${id}')" class="bg-green-600 text-white px-5 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-black transition-all shadow-md active:scale-95">🖨️ PRINT MRF</button>`
-                    : `<button onclick="approveCycleStep('${id}', '${data.status}')" class="bg-slate-900 text-white px-5 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-blue-700 transition-all shadow-md active:scale-95">SIGN RECORD</button>`;
+                    ? `<button onclick="printMRF('${id}')" class="bg-green-600 text-white px-5 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-black transition-all shadow-md">🖨️ PRINT MRF</button>`
+                    : `<button onclick="approveCycleStep('${id}', '${data.status}')" class="bg-slate-900 text-white px-5 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-blue-700 transition-all shadow-md">SIGN RECORD</button>`;
 
                 tbody.innerHTML += `
                     <tr class="hover:bg-blue-50/50 transition-all group">
@@ -390,7 +389,7 @@
                         <td class="px-8 py-5 text-xs font-black text-slate-900 uppercase tracking-tight">${data.position}</td>
                         <td class="px-8 py-5 text-xs font-bold text-slate-600">${data.department}</td>
                         <td class="px-8 py-5">
-                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase ${statusColor} border border-current shadow-sm">
+                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase ${statusColor} border border-current">
                                 ${data.status}
                             </span>
                         </td>
@@ -399,7 +398,7 @@
             });
         });
 
-        // PRINT FUNCTION LOGIC
+        // PRINT FUNCTION LOGIC (THE "printmrf" UPDATE)
         window.printMRF = async (docId) => {
             const docRef = doc(db, "mrf_requests", docId);
             const docSnap = await getDoc(docRef);
@@ -407,7 +406,6 @@
             if (!docSnap.exists()) return alert("Record not found!");
             const d = docSnap.data();
 
-            // Clone the MRF form container structure for printing
             const printArea = document.getElementById('print-area');
             printArea.innerHTML = `
                 <div class="mrf-container" style="border: 2px solid #000; padding: 30px; font-family: sans-serif;">
@@ -433,7 +431,7 @@
                         </tr>
                     </table>
                     
-                    <div style="margin-top: 30px; display: grid; grid-template-cols: 1fr 1fr; gap: 20px;">
+                    <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                         <div style="border: 1px solid #000; padding: 10px; text-align: center;">
                             <p style="font-size: 9px;">REQUESTED BY:</p>
                             <img src="${d.sig_supervisor}" style="height: 50px;">
@@ -479,36 +477,51 @@
             } catch (err) { alert("UPDATE FAILED: " + err.message); }
         };
 
+        // SIGNATURE PAD INITIALIZATION
         const canvas = document.getElementById('sig-supervisor');
         window.padSup = new SignaturePad(canvas);
 
-        const calcInputs = document.querySelectorAll('.calc');
-        calcInputs.forEach(input => {
-            input.addEventListener('input', () => {
-                const getVal = (name) => parseFloat(document.getElementsByName(name)[0]?.value) || 0;
-                const total = getVal('basic') + getVal('meal') + getVal('transpo') + getVal('comm') + getVal('internet');
-                document.getElementById('total').value = "₱ " + total.toLocaleString('en-PH', {minimumFractionDigits: 2});
-            });
+        // REAL-TIME BUDGET CALCULATOR
+        const calculateTotal = () => {
+            const basic = parseFloat(document.getElementById('basic').value) || 0;
+            const meal = parseFloat(document.getElementsByName('meal')[0].value) || 0;
+            const transpo = parseFloat(document.getElementsByName('transpo')[0].value) || 0;
+            const comm = parseFloat(document.getElementsByName('comm')[0].value) || 0;
+            const internet = parseFloat(document.getElementsByName('internet')[0].value) || 0;
+            
+            const total = basic + meal + transpo + comm + internet;
+            document.getElementById('total').value = "₱ " + total.toLocaleString(undefined, {minimumFractionDigits: 2});
+        };
+
+        document.querySelectorAll('.calc').forEach(input => {
+            input.addEventListener('input', calculateTotal);
         });
 
+        // FORM SUBMISSION
         document.getElementById('mrfForm').onsubmit = async (e) => {
             e.preventDefault();
-            if(padSup.isEmpty()) return alert("Supervisor signature required.");
+            if (padSup.isEmpty()) return alert("Please provide supervisor signature.");
 
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
+            
+            // Collect multi-select values
+            data.reason = Array.from(document.querySelectorAll('input[name="reason"]:checked')).map(cb => cb.value).join(', ');
+            data.emp_type = Array.from(document.querySelectorAll('input[name="emp_type"]:checked')).map(cb => cb.value).join(', ');
+            data.educ = Array.from(document.querySelectorAll('input[name="educ"]:checked')).map(cb => cb.value).join(', ');
+            data.grad_status = Array.from(document.querySelectorAll('input[name="grad_status"]:checked')).map(cb => cb.value).join(', ');
+
             data.sig_supervisor = padSup.toDataURL();
             data.status = "WAITING_DEPT_HEAD";
             data.submittedAt = serverTimestamp();
 
             try {
                 await addDoc(collection(db, "mrf_requests"), data);
-                alert("SUCCESS: Record logged for approval.");
-                showSection('dashboard');
+                alert("SUCCESS: MRF Submitted to Approval Cycle!");
                 e.target.reset();
                 padSup.clear();
-                document.getElementById('total').value = "₱ 0.00";
-            } catch (err) { alert("FIREBASE ERROR: " + err.message); }
+                showSection('dashboard');
+            } catch (err) { alert("Error: " + err.message); }
         };
     </script>
 </body>
