@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i-Merch Media MRF Online</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        .mrf-container { max-width: 950px; margin: auto; border: 2px solid #000; padding: 25px; background: #fff; }
+        .section-header { background: #eee; font-weight: bold; text-align: center; border: 1px solid #000; padding: 4px; margin-top: 10px; text-transform: uppercase; }
+        input[type="text"], input[type="number"], input[type="date"], select { border-bottom: 1px solid #000; outline: none; padding: 2px; font-size: 12px; }
+        canvas { border: 1px dashed #ccc; width: 100%; height: 80px; background: #fdfdfd; }
+        .grid-box { border: 1px solid #000; }
+        .border-right { border-right: 1px solid #000; }
+        .border-bottom { border-bottom: 1px solid #000; }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+
+    <div class="mrf-container shadow-2xl">
+        <div class="flex justify-center mb-4">
+            <img src="i-Merch Media Logo updated.jpg" alt="iMerch Logo" class="h-28">
+        </div>
+
+        <div class="text-center mb-4">
+            <h1 class="text-xl font-bold uppercase">I-Merch Media Inc.</h1>
+            <p class="text-xs">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
+            <h2 class="text-lg font-bold border border-black mt-2 py-1 bg-gray-50">MANPOWER REQUEST FORM</h2>
+        </div>
+
+        <form id="mrfForm" class="text-[12px] space-y-4">
+            <!-- JOB SPECIFICATIONS -->
+            <div class="grid-box grid grid-cols-3">
+                <div class="p-2 border-right border-bottom"><label class="font-bold">No. of Vacancies:</label><input type="number" name="vacancies" required class="w-full"></div>
+                <div class="p-2 border-right border-bottom"><label class="font-bold">Job Position:</label><input type="text" name="position" required class="w-full"></div>
+                <div class="p-2 border-bottom"><label class="font-bold">Department:</label><input type="text" name="department" required class="w-full"></div>
+                
+                <div class="p-2 border-right border-bottom"><label class="font-bold">Approved Manpower:</label><input type="text" name="approved_mp" class="w-full"></div>
+                <div class="p-2 border-right border-bottom"><label class="font-bold">Present Manpower:</label><input type="text" name="present_mp" class="w-full"></div>
+                <div class="p-2 border-bottom">
+                    <label class="font-bold">Replacement of:</label><input type="text" name="replacement_of" class="w-full">
+                    <label class="font-bold block mt-1">Date Vacant:</label><input type="date" name="date_vacant" class="w-full">
+                </div>
+
+                <!-- REASON FOR REQUEST -->
+                <div class="p-2 col-span-3 border-t border-black">
+                    <div class="flex items-start space-x-4">
+                        <label class="font-bold whitespace-nowrap">Reason for Request:</label>
+                        <div class="flex flex-col">
+                            <label><input type="checkbox" name="reason_type" value="Additional"> ( ) Additional</label>
+                            <label><input type="checkbox" name="reason_type" value="Replacement"> ( ) Replacement</label>
+                        </div>
+                        <div class="flex-1 space-y-1">
+                            <div class="flex items-center space-x-2"><span class="text-[10px] italic">IF RELIEVER, WHO & WHY?</span><input type="text" name="reliever_reason" class="w-full"></div>
+                            <div class="flex items-center space-x-2"><span class="text-[10px] italic">IF RESIGNED, ATTACH RESIGNATION LETTER/CLEARANCE:</span><input type="text" name="resignation_details" class="w-full"></div>
+                            <div class="flex items-center space-x-2"><span class="text-[10px] italic text-wrap">IF ADDITIONAL EMPLOYEE, NEW OUTLET OR NEW ACCOUNT?</span><input type="text" name="additional_details" class="w-full"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">Type of Employment</div>
+            <div class="grid-box grid grid-cols-4 p-2 text-center">
+                <label><input type="checkbox" name="emp_type" value="Regular"> Regular</label>
+                <label><input type="checkbox" name="emp_type" value="Probationary"> Probationary</label>
+                <label><input type="checkbox" name="emp_type" value="Project"> Project</label>
+                <label><input type="checkbox" name="emp_type" value="Fixed-Term"> Fixed-Term</label>
+            </div>
+
+            <div class="grid-box p-2 flex items-center space-x-10">
+                <span class="font-bold">Duration:</span>
+                <div class="flex items-center space-x-2"><label>Start:</label><input type="date" name="duration_start"></div>
+                <div class="flex items-center space-x-2"><label>End:</label><input type="date" name="duration_end"></div>
+            </div>
+
+            <div class="section-header">Educational Attainment</div>
+            <div class="grid-box grid grid-cols-3 p-2 text-center">
+                <label><input type="checkbox" name="educ_level" value="College"> College</label>
+                <label><input type="checkbox" name="educ_level" value="High School"> High School</label>
+                <label><input type="checkbox" name="educ_level" value="Elementary"> Elementary</label>
+            </div>
+            <div class="grid-box grid grid-cols-2">
+                <div class="p-2 border-right">
+                    <label class="block"><input type="checkbox" name="educ_status" value="Graduate"> ( ) Graduate</label>
+                    <label class="block mt-1"><input type="checkbox" name="educ_status" value="Undergraduate"> ( ) Undergraduate</label>
+                </div>
+                <div class="p-2"><label class="font-bold">Course Taken:</label><input type="text" name="course_taken" class="w-full"></div>
+            </div>
+
+            <!-- BUDGETED COMPENSATION PACKAGE SECTION -->
+            <div class="section-header">Budgeted Compensation Package</div>
+            <div class="grid-box grid grid-cols-2">
+                <div class="p-2 border-right border-bottom">
+                    <label class="font-bold block mb-1">Basic:</label>
+                    <input type="number" id="basic" name="basic" class="w-full calc outline-none">
+                </div>
+                <div class="p-2 border-bottom">
+                    <label class="font-bold">Charge to:</label>
+                    <label class="ml-2"><input type="checkbox" name="charge_to" value="Office"> ( ) Office</label>
+                    <label class="ml-2"><input type="checkbox" name="charge_to" value="Client"> ( ) Client</label>
+                </div>
+                <div class="p-2 border-right">
+                    <label class="font-bold">Reimbursable Operational Expenses:</label>
+                    <div class="grid grid-cols-2 gap-2 mt-2 text-[11px]">
+                        <div class="flex flex-col"><label>Meal:</label><input type="number" id="meal" name="meal" class="w-full calc"></div>
+                        <div class="flex flex-col"><label>Transportation:</label><input type="number" id="transpo" name="transpo" class="w-full calc"></div>
+                        <div class="flex flex-col"><label>Communication:</label><input type="number" id="comm" name="comm" class="w-full calc"></div>
+                        <div class="flex flex-col"><label>Internet:</label><input type="number" id="internet" name="internet" class="w-full calc"></div>
+                    </div>
+                    <div class="mt-4 flex items-center space-x-2">
+                        <span class="font-bold text-red-600 text-sm">TOTAL PHP:</span>
+                        <input type="text" id="total" name="total" readonly class="bg-yellow-50 border-none font-bold text-sm w-full text-red-600">
+                    </div>
+                </div>
+                <div class="p-2 space-y-2">
+                    <div><label class="font-bold">Special Trainings:</label><input type="text" name="special_trainings" class="w-full"></div>
+                    <div><label class="font-bold">MCE NO:</label><input type="text" name="mce_no" class="w-full"></div>
+                    <div><label class="font-bold">Approved CE/Budget:</label><input type="text" name="approved_ce" class="w-full"></div>
+                </div>
+            </div>
+
+            <!-- WORKFLOW ROUTING -->
+            <div class="bg-blue-50 p-4 border border-blue-200">
+                <h3 class="font-bold text-blue-700 mb-2 uppercase text-center">Approval Workflow Routing</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-bold">1. Requested by (Supervisor):</label>
+                        <select name="supervisor_email" class="w-full p-1 bg-white border">
+                            <option value="edgar.namoro@imerchmedia.net">Edgar Namoro</option>
+                            <option value="julie.jalandon@imerchmedia.net">Julie Jalandon</option>
+                            <option value="joy.biazon@imerchmedia.net">Joy Biazon</option>
+                        </select>
+                        <div class="mt-2">
+                            <canvas id="sig-supervisor"></canvas>
+                            <button type="button" onclick="padSup.clear()" class="text-red-500 text-[10px]">Clear Signature</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-bold">2. Noted by (Dept. Head):</label>
+                        <select name="dept_head_email" class="w-full p-1 bg-white border">
+                            <option value="chris.cantos@imerchmedia.com">Chris Cantos</option>
+                            <option value="vicky@imerchmedia.com">Vicky</option>
+                            <option value="jobey@imerchmedia.com">Jobey</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-4 text-[10px]">
+                    <div class="p-2 border bg-gray-50">
+                        <label class="block font-bold">3. Budget Verified by:</label>
+                        <p class="italic text-gray-500">teresita.lumaniog@imerchmedia.com</p>
+                    </div>
+                    <div class="p-2 border bg-red-50">
+                        <label class="block font-bold text-red-700">4. Approved by (MD):</label>
+                        <p class="italic text-red-600">glenn@imerchmedia.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-black text-white font-bold py-4 hover:bg-red-700 uppercase tracking-widest">Submit & Start Approval Cycle</button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdhUss3U_1j6LJDSg_n52w0x3XwRHNiPA",
+            authDomain: "imerch-mrf-system.firebaseapp.com",
+            projectId: "imerch-mrf-system",
+            storageBucket: "imerch-mrf-system.firebasestorage.app",
+            messagingSenderId: "184736719495",
+            appId: "1:184736719495:web:52a3b0336a140de1ac8e22",
+            measurementId: "G-TXCQV6EE5Z"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        window.padSup = new SignaturePad(document.getElementById('sig-supervisor'));
+
+        // Calculation Logic for Total PHP
+        document.querySelectorAll('.calc').forEach(input => {
+            input.addEventListener('input', () => {
+                const b = parseFloat(document.getElementById('basic').value) || 0;
+                const m = parseFloat(document.getElementById('meal').value) || 0;
+                const t = parseFloat(document.getElementById('transpo').value) || 0;
+                const c = parseFloat(document.getElementById('comm').value) || 0;
+                const i = parseFloat(document.getElementById('internet').value) || 0;
+                const total = b + m + t + c + i;
+                document.getElementById('total').value = total.toLocaleString('en-PH', {style:'currency', currency:'PHP'});
+            });
+        });
+
+        document.getElementById('mrfForm').onsubmit = async (e) => {
+            e.preventDefault();
+            if(padSup.isEmpty()) return alert("Supervisor signature is required.");
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            data.signature_supervisor = padSup.toDataURL();
+            data.status = "PENDING_DEPT_HEAD";
+            data.submittedAt = new Date();
+
+            try {
+                await addDoc(collection(db, "mrf_requests"), data);
+                alert("Successfully saved to Firestore!");
+                location.reload();
+            } catch (err) { alert("Error: " + err.message); }
+        };
+    </script>
+</body>
+</html>
