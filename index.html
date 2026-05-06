@@ -9,6 +9,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() { emailjs.init("YOUR_PUBLIC_KEY_HERE"); })();
@@ -351,6 +352,9 @@
     <!-- HIDDEN PRINT AREA -->
     <div id="print-area" class="hidden"></div>
 
+    <!-- HIDDEN JPG TEMPLATE AREA FOR EXPORT -->
+    <div id="jpg-export-area" style="position: absolute; left: -9999px; top: -9999px;"></div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, onSnapshot, doc, getDoc, updateDoc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
@@ -391,8 +395,11 @@
                 const isApproved = data.status === "FULLY_APPROVED";
                 const statusColor = isApproved ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800";
                 
-                const actionButton = isApproved 
-                    ? `<button onclick="printMRF('${id}')" class="bg-green-600 text-white px-5 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-black transition-all shadow-md">🖨️ PRINT MRF</button>`
+                const actionButtons = isApproved 
+                    ? `<div class="flex justify-center space-x-2">
+                        <button onclick="printMRF('${id}')" class="bg-green-600 text-white px-4 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-black transition-all shadow-md">🖨️ PRINT</button>
+                        <button onclick="downloadJPG('${id}')" class="bg-orange-500 text-white px-4 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-black transition-all shadow-md">🖼️ JPG</button>
+                       </div>`
                     : `<button onclick="approveCycleStep('${id}', '${data.status}')" class="bg-slate-900 text-white px-5 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-blue-700 transition-all shadow-md">SIGN RECORD</button>`;
 
                 tbody.innerHTML += `
@@ -405,34 +412,32 @@
                                 ${data.status}
                             </span>
                         </td>
-                        <td class="px-8 py-5 text-center">${actionButton}</td>
+                        <td class="px-8 py-5 text-center">${actionButtons}</td>
                     </tr>`;
             });
         });
 
-        // PRINT FUNCTION LOGIC - FULL FORM VERSION
-        window.printMRF = async (docId) => {
-            const docRef = doc(db, "mrf_requests", docId);
-            const docSnap = await getDoc(docRef);
-            
-            if (!docSnap.exists()) return alert("Record not found!");
-            const d = docSnap.data();
-
-            const printArea = document.getElementById('print-area');
-            
-            printArea.innerHTML = `
-                <div style="width: 850px; margin: 0 auto; padding: 20px; color: black; background: white;">
+        // SHARED TEMPLATE BUILDER
+        const buildFormHTML = (d, docId) => {
+            return `
+                <div style="width: 850px; margin: 0 auto; padding: 40px; color: black; background: white; border: 2px solid black; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
                     <div style="text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 20px;">
                         <img src="logo1.png" style="height: 60px; margin-bottom: 10px;">
-                        <p style="font-size: 10px; font-weight: bold; margin: 0;">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
-                        <h1 style="background: #111827; color: white; padding: 10px; font-size: 20px; margin-top: 10px; text-transform: uppercase;">Manpower Request Form</h1>
+                        <p style="font-size: 10px; font-weight: bold; margin: 0; text-transform: uppercase;">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
+                        <h1 style="background: #111827; color: white; padding: 15px; font-size: 24px; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; border: 2px solid black;">Manpower Request Form</h1>
                     </div>
+
+                    <style>
+                        .print-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                        .print-table td { border: 1px solid black; padding: 12px; font-size: 12px; vertical-align: top; }
+                        .print-header { background: #f3f4f6; font-weight: 900; text-align: center; font-size: 11px; text-transform: uppercase; }
+                    </style>
 
                     <table class="print-table">
                         <tr>
-                            <td colspan="1"><strong>VACANCIES:</strong><br>${d.vacancies || ''}</td>
-                            <td colspan="2"><strong>JOB POSITION:</strong><br>${d.position || ''}</td>
-                            <td colspan="1"><strong>DEPARTMENT:</strong><br>${d.department || ''}</td>
+                            <td style="width: 25%;"><strong>VACANCIES:</strong><br>${d.vacancies || ''}</td>
+                            <td colspan="2"><strong>JOB POSITION:</strong><br><span style="font-size: 14px; font-weight: bold;">${d.position || ''}</span></td>
+                            <td style="width: 25%;"><strong>DEPARTMENT:</strong><br>${d.department || ''}</td>
                         </tr>
                         <tr>
                             <td><strong>APPROVED MP:</strong><br>${d.approved_mp || ''}</td>
@@ -441,27 +446,27 @@
                             <td><strong>DATE VACANT:</strong><br>${d.date_vacant || ''}</td>
                         </tr>
                         <tr>
-                            <td colspan="4"><strong>REASON FOR REQUEST:</strong> ${d.reason || ''}</td>
+                            <td colspan="4"><strong>REASON FOR REQUEST:</strong> <span style="font-weight: bold;">${d.reason || ''}</span></td>
                         </tr>
-                        <tr class="print-header"><th colspan="4" style="text-align: center; color: white;">TYPE OF EMPLOYMENT</th></tr>
+                        <tr class="print-header"><td colspan="4">TYPE OF EMPLOYMENT</td></tr>
                         <tr>
                             <td colspan="2"><strong>EMPLOYMENT TYPE:</strong><br>${d.emp_type || ''}</td>
                             <td colspan="2"><strong>DURATION:</strong><br>START: ${d.start_date || '---'} | END: ${d.end_date || '---'}</td>
                         </tr>
-                        <tr class="print-header"><th colspan="4" style="text-align: center; color: white;">EDUCATIONAL ATTAINMENT</th></tr>
+                        <tr class="print-header"><td colspan="4">EDUCATIONAL ATTAINMENT</td></tr>
                         <tr>
                             <td colspan="2"><strong>LEVEL:</strong> ${d.educ || ''} (${d.grad_status || ''})</td>
                             <td colspan="2"><strong>COURSE:</strong> ${d.course || ''}</td>
                         </tr>
-                        <tr class="print-header"><th colspan="4" style="text-align: center; color: white;">BUDGETED COMPENSATION PACKAGE</th></tr>
+                        <tr class="print-header"><td colspan="4">BUDGETED COMPENSATION PACKAGE</td></tr>
                         <tr>
-                            <td><strong>BASIC SALARY:</strong><br>₱ ${d.basic || '0.00'}</td>
+                            <td><strong>BASIC SALARY:</strong><br><span style="color: #1d4ed8; font-weight: bold;">₱ ${d.basic || '0.00'}</span></td>
                             <td><strong>CHARGE TO:</strong><br>${d.charge || ''}</td>
                             <td colspan="2" rowspan="2">
                                 <strong>REIMBURSABLE EXPENSES:</strong><br>
                                 MEAL: ${d.meal || '0'} | TRANSPO: ${d.transpo || '0'}<br>
                                 COMM: ${d.comm || '0'} | INTERNET: ${d.internet || '0'}
-                                <div style="margin-top: 10px; font-size: 16px; font-weight: bold; border-top: 1px solid black;">GROSS TOTAL: ${d.total_package || '₱ 0.00'}</div>
+                                <div style="margin-top: 15px; font-size: 18px; font-weight: 900; border-top: 2px solid black; padding-top: 10px;">GROSS TOTAL: ${d.total_package || '₱ 0.00'}</div>
                             </td>
                         </tr>
                         <tr>
@@ -473,36 +478,75 @@
                         </tr>
                     </table>
 
-                    <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <div style="border: 1px solid black; padding: 10px; text-align: center;">
-                            <p style="font-size: 10px; margin: 0;">1. REQUESTED BY (SUPERVISOR)</p>
-                            <img src="${d.sig_supervisor}" style="height: 50px; margin: 5px auto; display: block;">
-                            <p style="font-weight: bold; border-top: 1px solid black; display: inline-block; padding: 0 10px;">${d.supervisor_email}</p>
+                    <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div style="border: 1px solid black; padding: 15px; text-align: center; background: #fff;">
+                            <p style="font-size: 10px; margin: 0; font-weight: bold;">1. REQUESTED BY (SUPERVISOR)</p>
+                            <img src="${d.sig_supervisor}" style="height: 60px; margin: 5px auto; display: block;">
+                            <p style="font-weight: 900; border-top: 1px solid black; display: inline-block; padding: 5px 20px; font-size: 11px;">${d.supervisor_email.toUpperCase()}</p>
                         </div>
-                        <div style="border: 1px solid black; padding: 10px; text-align: center;">
-                            <p style="font-size: 10px; margin: 0;">2. NOTED BY (DEPT. HEAD)</p>
-                            <div style="height: 50px; font-style: italic; line-height: 50px; color: blue;">e-Signed via Portal</div>
-                            <p style="font-weight: bold; border-top: 1px solid black; display: inline-block; padding: 0 10px;">CHRISTHOPER CANTOS</p>
+                        <div style="border: 1px solid black; padding: 15px; text-align: center; background: #fff;">
+                            <p style="font-size: 10px; margin: 0; font-weight: bold;">2. NOTED BY (DEPT. HEAD)</p>
+                            <div style="height: 60px; font-style: italic; line-height: 60px; color: blue; font-weight: bold;">e-Signed via Portal</div>
+                            <p style="font-weight: 900; border-top: 1px solid black; display: inline-block; padding: 5px 20px; font-size: 11px;">CHRISTOPHER CANTOS</p>
                         </div>
-                        <div style="border: 1px solid black; padding: 10px; text-align: center;">
-                            <p style="font-size: 10px; margin: 0;">3. BUDGET VERIFIED (FINANCE)</p>
-                            <div style="height: 50px; font-style: italic; line-height: 50px; color: green;">Verified via Dashboard</div>
-                            <p style="font-weight: bold; border-top: 1px solid black; display: inline-block; padding: 0 10px;">TERESITA LUMANIOG</p>
+                        <div style="border: 1px solid black; padding: 15px; text-align: center; background: #fff;">
+                            <p style="font-size: 10px; margin: 0; font-weight: bold;">3. BUDGET VERIFIED (FINANCE)</p>
+                            <div style="height: 60px; font-style: italic; line-height: 60px; color: green; font-weight: bold;">Verified via Dashboard</div>
+                            <p style="font-weight: 900; border-top: 1px solid black; display: inline-block; padding: 5px 20px; font-size: 11px;">TERESITA LUMANIOG</p>
                         </div>
-                        <div style="border: 1px solid black; padding: 10px; text-align: center;">
-                            <p style="font-size: 10px; margin: 0;">4. APPROVED BY (MANAGING DIRECTOR)</p>
-                            <div style="height: 50px; font-style: italic; line-height: 50px; color: red;">Final Approval Logged</div>
-                            <p style="font-weight: bold; border-top: 1px solid black; display: inline-block; padding: 0 10px;">GLENN HERNANDEZ</p>
+                        <div style="border: 1px solid black; padding: 15px; text-align: center; background: #fff;">
+                            <p style="font-size: 10px; margin: 0; font-weight: bold;">4. APPROVED BY (MANAGING DIRECTOR)</p>
+                            <div style="height: 60px; font-style: italic; line-height: 60px; color: red; font-weight: bold;">Final Approval Logged</div>
+                            <p style="font-weight: 900; border-top: 1px solid black; display: inline-block; padding: 5px 20px; font-size: 11px;">GLENN HERNANDEZ</p>
                         </div>
                     </div>
 
-                    <div style="margin-top: 20px; font-size: 9px; color: gray; text-align: left;">
-                        System Generated Record: ${docId} | Timestamp: ${new Date().toLocaleString()}
+                    <div style="margin-top: 25px; font-size: 10px; color: #4b5563; text-align: left; border-top: 1px dashed #ccc; padding-top: 10px;">
+                        <strong>System Generated Record:</strong> ${docId} | <strong>Timestamp:</strong> ${new Date().toLocaleString()}
                     </div>
                 </div>
             `;
+        };
+
+        // PRINT FUNCTION LOGIC
+        window.printMRF = async (docId) => {
+            const docRef = doc(db, "mrf_requests", docId);
+            const docSnap = await getDoc(docRef);
+            if (!docSnap.exists()) return alert("Record not found!");
+            
+            const printArea = document.getElementById('print-area');
+            printArea.innerHTML = buildFormHTML(docSnap.data(), docId);
 
             setTimeout(() => { window.print(); }, 500);
+        };
+
+        // NEW JPG DOWNLOAD LOGIC
+        window.downloadJPG = async (docId) => {
+            const docRef = doc(db, "mrf_requests", docId);
+            const docSnap = await getDoc(docRef);
+            if (!docSnap.exists()) return alert("Record not found!");
+
+            const exportArea = document.getElementById('jpg-export-area');
+            exportArea.innerHTML = buildFormHTML(docSnap.data(), docId);
+
+            try {
+                // Render with html2canvas
+                const canvas = await html2canvas(exportArea.firstElementChild, {
+                    scale: 2, // Higher resolution
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: "#ffffff"
+                });
+
+                const link = document.createElement('a');
+                link.download = `MRF-${docId}.jpg`;
+                link.href = canvas.toDataURL("image/jpeg", 0.9);
+                link.click();
+            } catch (err) {
+                alert("Export Failed: " + err.message);
+            } finally {
+                exportArea.innerHTML = ''; // Cleanup
+            }
         };
 
         // APPROVAL CYCLE LOGIC
@@ -561,7 +605,6 @@
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
             
-            // Collect multi-select values
             data.reason = Array.from(document.querySelectorAll('input[name="reason"]:checked')).map(cb => cb.value).join(', ');
             data.emp_type = Array.from(document.querySelectorAll('input[name="emp_type"]:checked')).map(cb => cb.value).join(', ');
             data.educ = Array.from(document.querySelectorAll('input[name="educ"]:checked')).map(cb => cb.value).join(', ');
