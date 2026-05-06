@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>i-Merch Media Portal - Enterprise Resource System</title>
     
-    <!-- FAVICON RESTORED -->
     <link rel="icon" type="image/png" href="favicon.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-    
-    <!-- EmailJS for Notifications -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() { emailjs.init("YOUR_PUBLIC_KEY_HERE"); })();
@@ -28,7 +25,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* MRF CONTAINER & FORM STYLING - FULL SPEC */
         .mrf-container { 
             max-width: 950px; 
             margin: 20px auto; 
@@ -84,11 +80,17 @@
             text-align: center;
             padding: 10px;
         }
+
+        /* PRINT STYLES */
+        @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; }
+        }
     </style>
 </head>
 <body class="bg-slate-100 flex h-screen overflow-hidden">
 
-    <!-- SIDEBAR NAVIGATION - FIXED ATTACHMENT -->
     <aside class="w-80 bg-slate-900 text-white flex flex-col shadow-2xl shrink-0">
         <div class="p-10 border-b border-slate-800 text-center">
             <img src="logo1.png" alt="iMerch Logo" class="h-14 mx-auto mb-4 object-contain">
@@ -117,7 +119,6 @@
         </div>
     </aside>
 
-    <!-- MAIN INTERFACE -->
     <main class="flex-1 overflow-y-auto p-12 bg-[#f8fafc]">
         
         <!-- DASHBOARD SECTION -->
@@ -158,11 +159,9 @@
             </div>
         </section>
 
-        <!-- MRF FORM SECTION - NO CODE REMOVED -->
+        <!-- MRF FORM SECTION -->
         <section id="section-mrf" class="content-section">
             <div class="mrf-container shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
-                
-                <!-- HEADER BOX -->
                 <div class="text-center mb-8">
                     <img src="logo1.png" class="h-20 mx-auto mb-4 object-contain">
                     <p class="text-[12px] font-black text-gray-800 tracking-[0.2em] uppercase">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
@@ -171,7 +170,6 @@
                 </div>
 
                 <form id="mrfForm" class="text-[13px] space-y-0">
-                    
                     <!-- BOX 1: JOB SPECS -->
                     <div class="grid-box grid grid-cols-3">
                         <div class="p-4 border-right border-bottom bg-slate-50/50">
@@ -229,7 +227,7 @@
                         </div>
                     </div>
 
-                    <!-- BOX 3: EDUCATIONAL ATTAINMENT - RESTORED -->
+                    <!-- BOX 3: EDUCATIONAL ATTAINMENT -->
                     <div class="section-header">Educational Attainment</div>
                     <div class="grid-box">
                         <div class="grid grid-cols-3 p-5 text-center border-bottom font-black text-[11px]">
@@ -269,10 +267,10 @@
                         <div class="p-6 border-right bg-white">
                             <label class="italic font-black text-[11px] text-blue-800 uppercase tracking-tighter mb-4 block">Reimbursable Operational Expenses:</label>
                             <div class="grid grid-cols-2 gap-6">
-                                <div><span class="text-[10px] font-bold block mb-1">MEAL:</span><input type="number" id="meal" class="calc font-bold"></div>
-                                <div><span class="text-[10px] font-bold block mb-1">TRANSPO:</span><input type="number" id="transpo" class="calc font-bold"></div>
-                                <div><span class="text-[10px] font-bold block mb-1">COMM:</span><input type="number" id="comm" class="calc font-bold"></div>
-                                <div><span class="text-[10px] font-bold block mb-1">INTERNET:</span><input type="number" id="internet" class="calc font-bold"></div>
+                                <div><span class="text-[10px] font-bold block mb-1">MEAL:</span><input type="number" id="meal" name="meal" class="calc font-bold"></div>
+                                <div><span class="text-[10px] font-bold block mb-1">TRANSPO:</span><input type="number" id="transpo" name="transpo" class="calc font-bold"></div>
+                                <div><span class="text-[10px] font-bold block mb-1">COMM:</span><input type="number" id="comm" name="comm" class="calc font-bold"></div>
+                                <div><span class="text-[10px] font-bold block mb-1">INTERNET:</span><input type="number" id="internet" name="internet" class="calc font-bold"></div>
                             </div>
                             <div class="mt-8 p-5 bg-red-600 rounded shadow-inner flex justify-between items-center text-white">
                                 <span class="font-black text-sm tracking-[0.2em]">GROSS TOTAL:</span>
@@ -286,12 +284,10 @@
                         </div>
                     </div>
 
-                    <!-- BOX 5: 4-STEP APPROVAL ROUTING (WITH VICKY/JOBEY) -->
+                    <!-- BOX 5: APPROVAL ROUTING -->
                     <div class="bg-blue-900 p-8 border-2 border-black mt-10 rounded-xl shadow-2xl">
                         <h3 class="text-center font-black text-white uppercase mb-8 text-sm tracking-[0.4em]">Approval Workflow Routing</h3>
                         <div class="grid grid-cols-2 gap-8">
-                            
-                            <!-- 1. Supervisor -->
                             <div class="bg-white p-6 border-2 border-blue-200 rounded-lg shadow-lg">
                                 <label class="font-black text-[11px] text-blue-900 block mb-3 border-b-2 border-blue-100 pb-2">1. REQUESTED BY (SUPERVISOR):</label>
                                 <select name="supervisor_email" id="supervisor_email" class="w-full font-black p-2 bg-blue-50 mb-4 rounded border-none">
@@ -307,7 +303,6 @@
                                 </div>
                             </div>
 
-                            <!-- 2. Dept Head - RESTORED VICKY & JOBEY -->
                             <div class="bg-white p-6 border-2 border-blue-200 rounded-lg shadow-lg">
                                 <label class="font-black text-[11px] text-blue-900 block mb-3 border-b-2 border-blue-100 pb-2">2. NOTED BY (DEPT. HEAD):</label>
                                 <select name="dept_head_email" id="dept_head_email" class="w-full font-black p-2 bg-blue-50 mb-4 rounded border-none">
@@ -318,20 +313,17 @@
                                 <div class="signature-placeholder">Awaiting signature via Dashboard login...</div>
                             </div>
 
-                            <!-- 3. Finance -->
                             <div class="bg-white p-6 border-2 border-blue-200 rounded-lg shadow-lg">
                                 <label class="font-black text-[11px] text-blue-900 block mb-2 border-b-2 border-blue-100 pb-2">3. BUDGET VERIFIED BY (FINANCE):</label>
                                 <p class="text-[11px] font-black text-slate-700 py-3 italic">teresita.lumaniog@imerchmedia.com</p>
                                 <div class="signature-placeholder">Awaiting Finance Verification</div>
                             </div>
 
-                            <!-- 4. Managing Director -->
                             <div class="bg-white p-6 border-2 border-red-200 rounded-lg shadow-lg">
                                 <label class="font-black text-[11px] text-red-900 block mb-2 border-b-2 border-red-100 pb-2">4. APPROVED BY (MANAGING DIRECTOR):</label>
                                 <p class="text-[11px] font-black text-slate-700 py-3 italic">glenn@imerchmedia.com</p>
                                 <div class="signature-placeholder bg-red-50/50">Awaiting Final MD Approval</div>
                             </div>
-
                         </div>
                     </div>
 
@@ -344,10 +336,12 @@
         </section>
     </main>
 
-    <!-- FIREBASE & CORE LOGIC -->
+    <!-- HIDDEN PRINT AREA -->
+    <div id="print-area" class="hidden"></div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, onSnapshot, doc, updateDoc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot, doc, getDoc, updateDoc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCdhUss3U_1j6LJDSg_n52w0x3XwRHNiPA",
@@ -361,7 +355,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Navigation Logic
         window.showSection = (id) => {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-link'));
@@ -369,7 +362,7 @@
             document.getElementById('nav-' + id).classList.add('active-link');
         };
 
-        // Real-time Dashboard Monitoring
+        // DASHBOARD REAL-TIME SYNC WITH PRINT BUTTON LOGIC
         const q = query(collection(db, "mrf_requests"), orderBy("submittedAt", "desc"));
         onSnapshot(q, (snapshot) => {
             const tbody = document.getElementById('pending-table-body');
@@ -383,8 +376,14 @@
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
                 const id = docSnap.id;
-                const statusColor = data.status === "FULLY_APPROVED" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800";
+                const isApproved = data.status === "FULLY_APPROVED";
+                const statusColor = isApproved ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800";
                 
+                // PRINT BUTTON APPEARS ONLY IF FULLY_APPROVED
+                const actionButton = isApproved 
+                    ? `<button onclick="printMRF('${id}')" class="bg-green-600 text-white px-5 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-black transition-all shadow-md active:scale-95">🖨️ PRINT MRF</button>`
+                    : `<button onclick="approveCycleStep('${id}', '${data.status}')" class="bg-slate-900 text-white px-5 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-blue-700 transition-all shadow-md active:scale-95">SIGN RECORD</button>`;
+
                 tbody.innerHTML += `
                     <tr class="hover:bg-blue-50/50 transition-all group">
                         <td class="px-8 py-5 text-xs font-bold text-slate-500">${data.submittedAt?.toDate().toLocaleString() || '---'}</td>
@@ -395,19 +394,67 @@
                                 ${data.status}
                             </span>
                         </td>
-                        <td class="px-8 py-5 text-center">
-                            <button onclick="approveCycleStep('${id}', '${data.status}')" class="bg-slate-900 text-white px-5 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-blue-700 transition-all shadow-md active:scale-95">
-                                SIGN RECORD
-                            </button>
-                        </td>
+                        <td class="px-8 py-5 text-center">${actionButton}</td>
                     </tr>`;
             });
         });
 
-        // --- updateDoc APPROVAL WORKFLOW SETUP ---
+        // PRINT FUNCTION LOGIC
+        window.printMRF = async (docId) => {
+            const docRef = doc(db, "mrf_requests", docId);
+            const docSnap = await getDoc(docRef);
+            
+            if (!docSnap.exists()) return alert("Record not found!");
+            const d = docSnap.data();
+
+            // Clone the MRF form container structure for printing
+            const printArea = document.getElementById('print-area');
+            printArea.innerHTML = `
+                <div class="mrf-container" style="border: 2px solid #000; padding: 30px; font-family: sans-serif;">
+                    <div style="text-align: center;">
+                        <img src="logo1.png" style="height: 60px;">
+                        <p style="font-size: 10px; font-weight: bold; margin-top: 5px;">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
+                        <h1 style="background: #000; color: #fff; padding: 10px; font-size: 20px; margin-top: 10px; text-transform: uppercase;">Manpower Request Form</h1>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px;">
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 10px; width: 33%;"><strong>VACANCIES:</strong><br>${d.vacancies}</td>
+                            <td style="border: 1px solid #000; padding: 10px; width: 33%;"><strong>POSITION:</strong><br>${d.position}</td>
+                            <td style="border: 1px solid #000; padding: 10px; width: 33%;"><strong>DEPARTMENT:</strong><br>${d.department}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 10px;"><strong>REASON:</strong><br>${d.reason || 'N/A'}</td>
+                            <td style="border: 1px solid #000; padding: 10px;"><strong>EMP TYPE:</strong><br>${d.emp_type || 'N/A'}</td>
+                            <td style="border: 1px solid #000; padding: 10px;"><strong>DURATION:</strong><br>${d.start_date} to ${d.end_date}</td>
+                        </tr>
+                         <tr>
+                            <td colspan="2" style="border: 1px solid #000; padding: 10px;"><strong>EDUCATIONAL ATTAINMENT:</strong><br>${d.educ} (${d.grad_status}) - ${d.course}</td>
+                            <td style="border: 1px solid #000; padding: 10px;"><strong>BUDGETED PKG:</strong><br>${d.total_package}</td>
+                        </tr>
+                    </table>
+                    
+                    <div style="margin-top: 30px; display: grid; grid-template-cols: 1fr 1fr; gap: 20px;">
+                        <div style="border: 1px solid #000; padding: 10px; text-align: center;">
+                            <p style="font-size: 9px;">REQUESTED BY:</p>
+                            <img src="${d.sig_supervisor}" style="height: 50px;">
+                            <p style="border-top: 1px solid #000; font-weight: bold;">${d.supervisor_email}</p>
+                        </div>
+                        <div style="border: 1px solid #000; padding: 10px; text-align: center;">
+                            <p style="font-size: 9px;">APPROVED BY:</p>
+                            <div style="height: 50px; display: flex; align-items: center; justify-content: center; font-style: italic;">e-Signed via MD Portal</div>
+                            <p style="border-top: 1px solid #000; font-weight: bold;">GLENN (MANAGING DIRECTOR)</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            window.print();
+        };
+
+        // APPROVAL CYCLE LOGIC
         window.approveCycleStep = async (docId, currentStatus) => {
             const pin = prompt(`APPROVING STEP: ${currentStatus}\nEnter Authorization Key:`);
-            if (pin !== "1234") return alert("Unauthorized Key."); // Placeholder key
+            if (pin !== "1234") return alert("Unauthorized Key.");
 
             const docRef = doc(db, "mrf_requests", docId);
             let nextStatus = "";
@@ -415,84 +462,53 @@
 
             if (currentStatus === "WAITING_DEPT_HEAD") {
                 nextStatus = "WAITING_FINANCE";
-                updatePayload = {
-                    status: nextStatus,
-                    notedAt: serverTimestamp(),
-                    sig_dept_head: "AUTHORIZED_SIGNATURE_BLOB"
-                };
+                updatePayload = { status: nextStatus, notedAt: serverTimestamp() };
             } else if (currentStatus === "WAITING_FINANCE") {
                 nextStatus = "WAITING_MD";
-                updatePayload = {
-                    status: nextStatus,
-                    verifiedAt: serverTimestamp(),
-                    sig_finance: "AUTHORIZED_SIGNATURE_BLOB"
-                };
+                updatePayload = { status: nextStatus, verifiedAt: serverTimestamp() };
             } else if (currentStatus === "WAITING_MD") {
                 nextStatus = "FULLY_APPROVED";
-                updatePayload = {
-                    status: nextStatus,
-                    approvedAt: serverTimestamp(),
-                    sig_md: "AUTHORIZED_SIGNATURE_BLOB"
-                };
+                updatePayload = { status: nextStatus, approvedAt: serverTimestamp() };
             } else {
-                return alert("This record is already fully processed.");
+                return alert("Record already processed.");
             }
 
             try {
                 await updateDoc(docRef, updatePayload);
-                alert(`SUCCESS: Request status updated to ${nextStatus}. Notification queued.`);
-            } catch (err) {
-                alert("UPDATE FAILED: " + err.message);
-            }
+                alert(`SUCCESS: Status updated to ${nextStatus}.`);
+            } catch (err) { alert("UPDATE FAILED: " + err.message); }
         };
 
-        // Signature Initialization
         const canvas = document.getElementById('sig-supervisor');
         window.padSup = new SignaturePad(canvas);
 
-        // Compensation Calculator Setup
         const calcInputs = document.querySelectorAll('.calc');
         calcInputs.forEach(input => {
             input.addEventListener('input', () => {
-                const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
+                const getVal = (name) => parseFloat(document.getElementsByName(name)[0]?.value) || 0;
                 const total = getVal('basic') + getVal('meal') + getVal('transpo') + getVal('comm') + getVal('internet');
                 document.getElementById('total').value = "₱ " + total.toLocaleString('en-PH', {minimumFractionDigits: 2});
             });
         });
 
-        // FORM SUBMIT & EMAILJS NOTIFICATION
         document.getElementById('mrfForm').onsubmit = async (e) => {
             e.preventDefault();
-            if(padSup.isEmpty()) return alert("Supervisor signature required for submission.");
+            if(padSup.isEmpty()) return alert("Supervisor signature required.");
 
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
-            
-            // Add Initial Metadata
             data.sig_supervisor = padSup.toDataURL();
             data.status = "WAITING_DEPT_HEAD";
             data.submittedAt = serverTimestamp();
 
             try {
                 await addDoc(collection(db, "mrf_requests"), data);
-                
-                // EmailJS Notification Logic
-                emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-                    to_email: data.dept_head_email,
-                    approver_name: data.dept_head_email.split('@')[0],
-                    position: data.position,
-                    submitted_by: data.supervisor_email
-                }).then(() => {
-                    alert("SUCCESS: Record logged and Email Notification sent to Dept Head.");
-                });
-
+                alert("SUCCESS: Record logged for approval.");
                 showSection('dashboard');
                 e.target.reset();
                 padSup.clear();
                 document.getElementById('total').value = "₱ 0.00";
-            } catch (err) {
-                alert("FIREBASE ERROR: " + err.message);
-            }
+            } catch (err) { alert("FIREBASE ERROR: " + err.message); }
         };
     </script>
 </body>
