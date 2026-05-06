@@ -12,190 +12,312 @@
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
     
     <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .active-link { background-color: #1e3a8a; border-left: 4px solid #facc15; }
         .content-section { display: none; }
         .content-section.active { display: block; }
         
-        /* Original MRF Styles Restored */
-        .mrf-container { max-width: 850px; margin: auto; border: 1px solid #000; padding: 20px; background: #fff; font-family: Arial, sans-serif; }
-        .section-header { background: #eee; font-weight: bold; text-align: center; border: 1px solid #000; padding: 3px; margin-top: 8px; text-transform: uppercase; font-size: 11px; }
-        input[type="text"], input[type="number"], input[type="date"], select { border-bottom: 1px solid #000; outline: none; padding: 1px; font-size: 11px; border-top:none; border-left:none; border-right:none; background: transparent; }
+        /* FULL MRF STYLES - ORIGINAL FORMAT */
+        .mrf-container { 
+            max-width: 900px; 
+            margin: auto; 
+            border: 2px solid #000; 
+            padding: 30px; 
+            background: #fff; 
+        }
+        .section-header { 
+            background: #f3f4f6; 
+            font-weight: bold; 
+            text-align: center; 
+            border: 1px solid #000; 
+            padding: 6px; 
+            margin-top: 15px; 
+            text-transform: uppercase; 
+            font-size: 12px; 
+        }
+        input, select { 
+            border-bottom: 1px solid #000; 
+            outline: none; 
+            padding: 2px; 
+            font-size: 12px; 
+            border-top:none; 
+            border-left:none; 
+            border-right:none; 
+            background: transparent; 
+        }
         .grid-box { border: 1px solid #000; }
         .border-right { border-right: 1px solid #000; }
         .border-bottom { border-bottom: 1px solid #000; }
-        canvas { border: 1px dashed #ccc; width: 100%; height: 70px; background: #fdfdfd; }
+        canvas { 
+            border: 1px dashed #cbd5e1; 
+            width: 100%; 
+            height: 80px; 
+            background: #ffffff; 
+        }
+        .signature-placeholder {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f9fafb;
+            color: #9ca3af;
+            font-style: italic;
+            font-size: 10px;
+            border: 1px solid #e5e7eb;
+        }
     </style>
 </head>
-<body class="bg-gray-100 flex h-screen overflow-hidden">
+<body class="bg-gray-200 flex h-screen overflow-hidden">
 
-    <!-- SIDEBAR -->
-    <aside class="w-64 bg-slate-900 text-white flex flex-col shadow-xl shrink-0">
-        <div class="p-6 border-b border-slate-700 text-center">
-            <img src="logo1.png" alt="Logo" class="h-10 mx-auto mb-2 object-contain">
-            <h2 class="text-xs font-bold tracking-widest uppercase">i-Merch Systems</h2>
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="w-72 bg-slate-900 text-white flex flex-col shadow-2xl shrink-0">
+        <div class="p-8 border-b border-slate-800 text-center">
+            <!-- GITHUB ATTACHED LOGO -->
+            <img src="logo1.png" alt="iMerch Logo" class="h-12 mx-auto mb-3 object-contain">
+            <h2 class="text-sm font-black tracking-widest uppercase text-blue-400">i-Merch Systems</h2>
+            <p class="text-[9px] text-slate-500 mt-1">Enterprise Resource Portal</p>
         </div>
-        <nav class="flex-1 mt-4">
-            <a href="#" onclick="showSection('dashboard')" id="nav-dashboard" class="flex items-center px-6 py-4 hover:bg-slate-800 transition-all active-link">
-                <span class="mr-3">📊</span> Dashboard
+        
+        <nav class="flex-1 mt-6">
+            <a href="#" onclick="showSection('dashboard')" id="nav-dashboard" class="flex items-center px-8 py-4 hover:bg-slate-800 transition-all active-link">
+                <span class="mr-3 text-lg">📊</span> 
+                <span class="font-bold text-sm tracking-wide">DASHBOARD</span>
             </a>
-            <a href="#" onclick="showSection('mrf')" id="nav-mrf" class="flex items-center px-6 py-4 hover:bg-slate-800 transition-all">
-                <span class="mr-3">📄</span> Manpower Request
+            <a href="#" onclick="showSection('mrf')" id="nav-mrf" class="flex items-center px-8 py-4 hover:bg-slate-800 transition-all">
+                <span class="mr-3 text-lg">📄</span> 
+                <span class="font-bold text-sm tracking-wide">MANPOWER REQUEST</span>
             </a>
         </nav>
-        <div class="p-4 border-t border-slate-700 text-[10px] text-slate-400 text-center italic">
-            i-Merch Media Inc. © 2026
+
+        <div class="p-6 border-t border-slate-800 text-[10px] text-slate-500 text-center">
+            <p>i-Merch Media Inc.</p>
+            <p class="mt-1 font-mono text-blue-900">v2.0.2026</p>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-1 overflow-y-auto p-6">
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 overflow-y-auto p-10">
         
-        <!-- DASHBOARD SECTION -->
+        <!-- DASHBOARD: PENDING APPROVALS -->
         <section id="section-dashboard" class="content-section active">
-            <h1 class="text-xl font-bold text-gray-800 mb-4">Pending Approvals</h1>
-            <div class="bg-white rounded shadow overflow-hidden border border-gray-200">
-                <table class="w-full text-left text-xs text-black">
-                    <thead class="bg-gray-50 border-b">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Approval Cycle</h1>
+                    <p class="text-slate-500 text-sm">Monitoring of pending Manpower Request Forms.</p>
+                </div>
+                <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-xs font-bold shadow-sm">
+                    Live Updates Active
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-xl overflow-hidden border border-slate-200">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 border-b border-slate-200">
                         <tr>
-                            <th class="px-4 py-3 font-bold uppercase">Date Submitted</th>
-                            <th class="px-4 py-3 font-bold uppercase">Position</th>
-                            <th class="px-4 py-3 font-bold uppercase">Dept</th>
-                            <th class="px-4 py-3 font-bold uppercase">Requested By</th>
-                            <th class="px-4 py-3 font-bold uppercase text-center">Action</th>
+                            <th class="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-wider">Date Filed</th>
+                            <th class="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-wider">Position Title</th>
+                            <th class="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-wider">Department</th>
+                            <th class="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-wider">Current Status</th>
+                            <th class="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-wider text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="pending-table-body" class="divide-y divide-gray-200">
-                        <tr><td colspan="5" class="px-4 py-8 text-center text-gray-400 italic font-medium">Loading requests...</td></tr>
+                    <tbody id="pending-table-body" class="divide-y divide-slate-100">
+                        <!-- DATABASE DATA INJECTED HERE -->
+                        <tr>
+                            <td colspan="5" class="px-6 py-12 text-center text-slate-400 italic">
+                                <div class="flex flex-col items-center">
+                                    <svg class="animate-spin h-8 w-8 text-blue-500 mb-3" viewBox="0 0 24 24"></svg>
+                                    <span>Synchronizing with iMerch Cloud...</span>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- MANPOWER REQUEST FORM SECTION (ORIGINAL FORMAT) -->
+        <!-- MANPOWER REQUEST FORM: FULL ORIGINAL FORMAT -->
         <section id="section-mrf" class="content-section">
             <div class="mrf-container shadow-2xl">
-                <div class="text-center mb-2">
-                    <img src="logo1.png" class="h-14 mx-auto object-contain">
-                    <p class="text-[10px] mt-1 font-semibold">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
-                    <h2 class="text-md font-bold border border-black mt-2 py-1 bg-gray-50 uppercase tracking-tighter">Manpower Request Form</h2>
+                <!-- Header Restored -->
+                <div class="text-center mb-6">
+                    <img src="logo1.png" class="h-16 mx-auto mb-2 object-contain">
+                    <p class="text-[11px] font-bold text-gray-700 tracking-wider uppercase">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
+                    <div class="h-[2px] bg-black w-full my-3"></div>
+                    <h1 class="text-2xl font-black uppercase tracking-widest text-black py-2 bg-gray-50 border border-black">Manpower Request Form</h1>
                 </div>
 
-                <form id="mrfForm" class="text-[11px] space-y-2">
-                    <!-- JOB SPECIFICATIONS -->
+                <form id="mrfForm" class="text-[12px] space-y-4">
+                    
+                    <!-- JOB SPECIFICATIONS BLOCK -->
                     <div class="grid-box grid grid-cols-3">
-                        <div class="p-2 border-right border-bottom"><label class="font-bold">No. of Vacancies:</label><input type="number" name="vacancies" required class="w-full"></div>
-                        <div class="p-2 border-right border-bottom"><label class="font-bold">Job Position:</label><input type="text" name="position" required class="w-full"></div>
-                        <div class="p-2 border-bottom"><label class="font-bold">Department:</label><input type="text" name="department" required class="w-full"></div>
-                        
-                        <div class="p-2 border-right border-bottom"><label class="font-bold">Approved Manpower:</label><input type="text" name="approved_mp" class="w-full"></div>
-                        <div class="p-2 border-right border-bottom"><label class="font-bold">Present Manpower:</label><input type="text" name="present_mp" class="w-full"></div>
-                        <div class="p-2 border-bottom">
-                            <label class="font-bold">Replacement of:</label><input type="text" name="replacement_of" class="w-full">
-                            <label class="font-bold block mt-1">Date Vacant:</label><input type="date" name="date_vacant" class="w-full">
+                        <div class="p-3 border-right border-bottom">
+                            <label class="font-black block text-[10px] text-gray-500">NO. OF VACANCIES:</label>
+                            <input type="number" name="vacancies" required class="w-full font-bold">
                         </div>
-                        <div class="p-2 col-span-3 border-t border-black">
-                            <span class="font-bold mr-4">Reason for Request:</span>
-                            <label class="mr-4"><input type="checkbox" name="reason" value="Additional"> ( ) Additional</label>
-                            <label><input type="checkbox" name="reason" value="Replacement"> ( ) Replacement</label>
+                        <div class="p-3 border-right border-bottom">
+                            <label class="font-black block text-[10px] text-gray-500">JOB POSITION:</label>
+                            <input type="text" name="position" required class="w-full font-bold">
+                        </div>
+                        <div class="p-3 border-bottom">
+                            <label class="font-black block text-[10px] text-gray-500">DEPARTMENT:</label>
+                            <input type="text" name="department" required class="w-full font-bold">
+                        </div>
+                        
+                        <div class="p-3 border-right border-bottom">
+                            <label class="font-black block text-[10px] text-gray-500">APPROVED MANPOWER:</label>
+                            <input type="text" name="approved_mp" class="w-full">
+                        </div>
+                        <div class="p-3 border-right border-bottom">
+                            <label class="font-black block text-[10px] text-gray-500">PRESENT MANPOWER:</label>
+                            <input type="text" name="present_mp" class="w-full">
+                        </div>
+                        <div class="p-3 border-bottom">
+                            <label class="font-black block text-[10px] text-gray-500">REPLACEMENT OF:</label>
+                            <input type="text" name="replacement_of" class="w-full">
+                            <label class="font-black block text-[10px] text-gray-500 mt-2">DATE VACANT:</label>
+                            <input type="date" name="date_vacant" class="w-full">
+                        </div>
+
+                        <!-- Reason Block -->
+                        <div class="p-3 col-span-3 border-t border-black bg-gray-50">
+                            <span class="font-black mr-6 uppercase">Reason for Request:</span>
+                            <label class="mr-6 font-bold cursor-pointer"><input type="checkbox" name="reason" value="Additional" class="mr-2"> ( ) ADDITIONAL</label>
+                            <label class="font-bold cursor-pointer"><input type="checkbox" name="reason" value="Replacement" class="mr-2"> ( ) REPLACEMENT</label>
                         </div>
                     </div>
 
                     <!-- TYPE OF EMPLOYMENT & DURATION -->
                     <div class="section-header">Type of Employment (Check your answer)</div>
-                    <div class="grid-box grid grid-cols-4 p-2 text-center">
-                        <label><input type="checkbox" name="emp_type" value="Regular"> Regular</label>
-                        <label><input type="checkbox" name="emp_type" value="Probationary"> Probationary</label>
-                        <label><input type="checkbox" name="emp_type" value="Project"> Project</label>
-                        <label><input type="checkbox" name="emp_type" value="Fixed-Term"> Fixed-Term</label>
-                    </div>
-                    <div class="grid-box p-2 flex items-center space-x-4 border-t-0">
-                        <span class="font-bold">Duration:</span>
-                        <label>Start: <input type="date" name="start_date"></label>
-                        <label>End: <input type="date" name="end_date"></label>
+                    <div class="grid-box">
+                        <div class="grid grid-cols-4 p-3 text-center font-bold">
+                            <label><input type="checkbox" name="emp_type" value="Regular"> REGULAR</label>
+                            <label><input type="checkbox" name="emp_type" value="Probationary"> PROBATIONARY</label>
+                            <label><input type="checkbox" name="emp_type" value="Project"> PROJECT</label>
+                            <label><input type="checkbox" name="emp_type" value="Fixed-Term"> FIXED-TERM</label>
+                        </div>
+                        <div class="p-3 border-t border-black flex items-center justify-center space-x-10 bg-slate-50">
+                            <div class="flex items-center">
+                                <span class="font-black mr-3">DURATION:</span>
+                                <span class="mr-2">START:</span> <input type="date" name="start_date">
+                            </div>
+                            <div class="flex items-center">
+                                <span class="mr-2">END:</span> <input type="date" name="end_date">
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- EDUCATIONAL ATTAINMENT -->
+                    <!-- EDUCATIONAL ATTAINMENT RESTORED -->
                     <div class="section-header">Educational Attainment (Check your answer)</div>
                     <div class="grid-box">
-                        <div class="grid grid-cols-3 p-2 text-center border-bottom">
-                            <label><input type="checkbox" name="educ" value="College"> College</label>
-                            <label><input type="checkbox" name="educ" value="High School"> High School</label>
-                            <label><input type="checkbox" name="educ" value="Elementary"> Elementary</label>
+                        <div class="grid grid-cols-3 p-3 text-center border-bottom font-bold">
+                            <label><input type="checkbox" name="educ" value="College"> COLLEGE</label>
+                            <label><input type="checkbox" name="educ" value="High School"> HIGH SCHOOL</label>
+                            <label><input type="checkbox" name="educ" value="Elementary"> ELEMENTARY</label>
                         </div>
                         <div class="grid grid-cols-2">
-                            <div class="p-2 border-right">
-                                <label class="block"><input type="checkbox" name="grad_status" value="Graduate"> ( ) Graduate</label>
-                                <label class="block"><input type="checkbox" name="grad_status" value="Undergraduate"> ( ) Undergraduate</label>
+                            <div class="p-4 border-right flex flex-col justify-center space-y-2">
+                                <label class="font-bold"><input type="checkbox" name="grad_status" value="Graduate"> ( ) GRADUATE</label>
+                                <label class="font-bold"><input type="checkbox" name="grad_status" value="Undergraduate"> ( ) UNDERGRADUATE</label>
                             </div>
-                            <div class="p-2">
-                                <label class="font-bold">Course Taken:</label>
-                                <input type="text" name="course" class="w-full">
+                            <div class="p-4">
+                                <label class="font-black block text-[10px] text-gray-500 mb-1">COURSE TAKEN:</label>
+                                <input type="text" name="course" class="w-full font-bold" placeholder="N/A if not applicable">
                             </div>
                         </div>
                     </div>
 
-                    <!-- COMPENSATION -->
+                    <!-- COMPENSATION PACKAGE -->
                     <div class="section-header">Budgeted Compensation Package</div>
                     <div class="grid-box grid grid-cols-2">
-                        <div class="p-2 border-right border-bottom">
-                            <label class="font-bold block">Basic Salary:</label>
-                            <input type="number" id="basic" name="basic" class="w-full calc">
+                        <div class="p-4 border-right border-bottom">
+                            <label class="font-black block text-[10px] text-gray-500">BASIC SALARY:</label>
+                            <input type="number" id="basic" name="basic" class="w-full font-bold text-lg calc" placeholder="0.00">
                         </div>
-                        <div class="p-2 border-bottom">
-                            <label class="font-bold">Charge to:</label>
-                            <label class="ml-2"><input type="checkbox" name="charge" value="Office"> ( ) Office</label>
-                            <label class="ml-2"><input type="checkbox" name="charge" value="Client"> ( ) Client</label>
-                        </div>
-                        <div class="p-2 border-right">
-                            <label class="italic font-bold text-[10px]">Reimbursable Operational Expenses:</label>
-                            <div class="grid grid-cols-2 gap-x-2 text-[10px] mt-1">
-                                <label>Meal: <input type="number" id="meal" class="w-16 calc"></label>
-                                <label>Transpo: <input type="number" id="transpo" class="w-16 calc"></label>
-                                <label>Comm: <input type="number" id="comm" class="w-16 calc"></label>
-                                <label>Internet: <input type="number" id="internet" class="w-16 calc"></label>
+                        <div class="p-4 border-bottom bg-gray-50">
+                            <label class="font-black block mb-2">CHARGE TO:</label>
+                            <div class="flex space-x-6">
+                                <label class="font-bold"><input type="checkbox" name="charge" value="Office"> ( ) OFFICE</label>
+                                <label class="font-bold"><input type="checkbox" name="charge" value="Client"> ( ) CLIENT</label>
                             </div>
-                            <div class="mt-2 font-bold text-red-600 bg-yellow-50 p-1 border-t border-black">TOTAL PHP: <input type="text" id="total" name="total_package" readonly class="border-none bg-transparent font-bold"></div>
                         </div>
-                        <div class="p-2 space-y-1">
-                            <label class="block font-bold">Special Trainings: <input type="text" name="trainings" class="w-full"></label>
-                            <label class="block font-bold">MCE NO: <input type="text" name="mce" class="w-full"></label>
-                            <label class="block font-bold">Approved CE/Budget: <input type="text" name="budget" class="w-full"></label>
+                        <div class="p-4 border-right">
+                            <label class="italic font-black text-[10px] text-blue-700">REIMBURSABLE OPERATIONAL EXPENSES:</label>
+                            <div class="grid grid-cols-2 gap-4 mt-3">
+                                <div><span class="text-[10px] block">MEAL:</span><input type="number" id="meal" class="w-full calc"></div>
+                                <div><span class="text-[10px] block">TRANSPO:</span><input type="number" id="transpo" class="w-full calc"></div>
+                                <div><span class="text-[10px] block">COMM:</span><input type="number" id="comm" class="w-full calc"></div>
+                                <div><span class="text-[10px] block">INTERNET:</span><input type="number" id="internet" class="w-full calc"></div>
+                            </div>
+                            <div class="mt-6 p-3 bg-red-50 border border-red-200 flex justify-between items-center">
+                                <span class="font-black text-red-700">TOTAL PHP:</span>
+                                <input type="text" id="total" name="total_package" readonly class="text-right font-black text-red-700 border-none outline-none bg-transparent" value="₱ 0.00">
+                            </div>
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <div><label class="font-black block text-[10px] text-gray-500">SPECIAL TRAININGS:</label><input type="text" name="trainings" class="w-full"></div>
+                            <div><label class="font-black block text-[10px] text-gray-500">MCE NO:</label><input type="text" name="mce" class="w-full"></div>
+                            <div><label class="font-black block text-[10px] text-gray-500">APPROVED CE/BUDGET:</label><input type="text" name="budget" class="w-full"></div>
                         </div>
                     </div>
 
-                    <!-- APPROVAL WORKFLOW -->
-                    <div class="bg-blue-50 p-4 border border-blue-200 mt-2 rounded">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="font-bold text-blue-900 block mb-1">1. Requested by (Supervisor):</label>
-                                <select name="supervisor_email" class="w-full bg-white border border-blue-300 p-1">
+                    <!-- FOUR-STEP APPROVAL WORKFLOW -->
+                    <div class="bg-blue-50 p-6 border-2 border-blue-200 mt-8 rounded-xl">
+                        <h3 class="text-center font-black text-blue-900 uppercase mb-6 tracking-widest border-b border-blue-200 pb-2">Approval Workflow Routing</h3>
+                        <div class="grid grid-cols-2 gap-6">
+                            
+                            <!-- 1. Requested by -->
+                            <div class="bg-white p-4 border border-blue-100 rounded-lg shadow-sm">
+                                <label class="font-black text-[11px] text-blue-900 block mb-2">1. REQUESTED BY (SUPERVISOR):</label>
+                                <select name="supervisor_email" class="w-full font-bold p-1 bg-slate-50 mb-3">
                                     <option value="edgar.namoro@imerchmedia.net">Edgar Namoro</option>
                                     <option value="julie.jalandon@imerchmedia.net">Julie Jalandon</option>
                                     <option value="joy.biazon@imerchmedia.net">Joy Biazon</option>
                                 </select>
-                                <div class="mt-2 bg-white p-1 rounded border border-blue-200">
-                                    <canvas id="sig-supervisor"></canvas>
-                                    <button type="button" onclick="padSup.clear()" class="text-red-500 text-[10px] hover:font-bold">Clear Signature</button>
-                                </div>
+                                <canvas id="sig-supervisor"></canvas>
+                                <button type="button" onclick="padSup.clear()" class="text-red-500 text-[10px] font-bold mt-2 hover:underline">Clear Signature</button>
                             </div>
-                            <div class="text-[10px] space-y-1 pt-4 text-blue-900">
-                                <p class="border-b border-blue-100 pb-1"><strong>2. Noted by (Dept. Head):</strong> Chris Cantos</p>
-                                <p class="border-b border-blue-100 pb-1"><strong>3. Budget Verified (Finance):</strong> teresita.lumaniog@imerchmedia.com</p>
-                                <p><strong>4. Approved by (MD):</strong> glenn@imerchmedia.com</p>
+
+                            <!-- 2. Noted by -->
+                            <div class="bg-white p-4 border border-blue-100 rounded-lg shadow-sm flex flex-col">
+                                <label class="font-black text-[11px] text-blue-900 block mb-2">2. NOTED BY (DEPT. HEAD):</label>
+                                <p class="font-bold text-slate-700 py-1 border-b border-slate-200 mb-4">Chris Cantos</p>
+                                <div class="signature-placeholder flex-1">Awaiting Signature from Dashboard</div>
                             </div>
+
+                            <!-- 3. Verified by -->
+                            <div class="bg-white p-4 border border-blue-100 rounded-lg shadow-sm">
+                                <label class="font-black text-[11px] text-blue-900 block mb-1">3. BUDGET VERIFIED BY (FINANCE):</label>
+                                <p class="text-[10px] text-slate-500 mb-4">teresita.lumaniog@imerchmedia.com</p>
+                                <div class="signature-placeholder">Awaiting Finance Verification</div>
+                            </div>
+
+                            <!-- 4. Approved by -->
+                            <div class="bg-red-50 p-4 border border-red-200 rounded-lg shadow-sm">
+                                <label class="font-black text-[11px] text-red-900 block mb-1">4. APPROVED BY (MANAGING DIRECTOR):</label>
+                                <p class="text-[10px] text-red-400 mb-4 font-bold tracking-tight">glenn@imerchmedia.com</p>
+                                <div class="signature-placeholder bg-red-100/50">Awaiting Final MD Approval</div>
+                            </div>
+
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full bg-blue-900 text-white font-bold py-4 uppercase text-xs tracking-widest mt-2 hover:bg-black transition-all shadow-lg">Submit for Approval Cycle</button>
+                    <!-- Submission Button -->
+                    <button type="submit" class="w-full bg-slate-900 text-white font-black py-5 uppercase text-sm tracking-[0.3em] mt-8 hover:bg-black transition-all shadow-2xl rounded-lg">
+                        Submit for Approval Cycle
+                    </button>
+                    
                 </form>
             </div>
         </section>
     </main>
 
+    <!-- FIREBASE & LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
+        // FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyCdhUss3U_1j6LJDSg_n52w0x3XwRHNiPA",
             authDomain: "imerch-mrf-system.firebaseapp.com",
@@ -208,7 +330,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Navigation Control
+        // Sidebar Navigation Logic
         window.showSection = (id) => {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-link'));
@@ -216,63 +338,75 @@
             document.getElementById('nav-' + id).classList.add('active-link');
         };
 
-        // Real-time Dashboard Update
-        const q = query(collection(db, "mrf_requests"), where("status", "==", "PENDING_DEPT_HEAD"));
+        // Real-time Dashboard Listener
+        const q = query(collection(db, "mrf_requests"));
         onSnapshot(q, (snapshot) => {
             const tbody = document.getElementById('pending-table-body');
             tbody.innerHTML = '';
             
             if (snapshot.empty) {
-                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">Walang pending requests sa ngayon.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-12 text-center text-slate-400 font-medium tracking-tight">No Manpower Requests found in the cycle.</td></tr>';
                 return;
             }
 
             snapshot.forEach(doc => {
                 const data = doc.data();
+                const statusColor = data.status === "APPROVED" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800";
+                
                 tbody.innerHTML += `
-                    <tr class="hover:bg-blue-50 transition-colors">
-                        <td class="px-4 py-3 font-medium">${data.submittedAt?.toDate().toLocaleDateString()}</td>
-                        <td class="px-4 py-3 font-bold text-blue-900">${data.position}</td>
-                        <td class="px-4 py-3">${data.department}</td>
-                        <td class="px-4 py-3 text-gray-500">${data.supervisor_email}</td>
-                        <td class="px-4 py-3 text-center">
-                            <button class="bg-blue-600 text-white px-3 py-1 rounded text-[10px] font-bold hover:bg-black transition-all">REVIEW</button>
+                    <tr class="hover:bg-blue-50/50 transition-all cursor-default">
+                        <td class="px-6 py-4 text-xs font-medium text-slate-600">${data.submittedAt?.toDate().toLocaleDateString() || 'N/A'}</td>
+                        <td class="px-6 py-4 text-xs font-black text-slate-900 uppercase">${data.position}</td>
+                        <td class="px-6 py-4 text-xs text-slate-600">${data.department}</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 rounded-full text-[9px] font-black uppercase ${statusColor}">
+                                ${data.status}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <button class="bg-blue-700 text-white px-4 py-2 rounded font-black text-[10px] hover:bg-black transition-all shadow-md active:scale-95">
+                                VIEW & SIGN
+                            </button>
                         </td>
                     </tr>`;
             });
         });
 
-        // Form Logic & Sig Pad
+        // Signature Pad Initialization
         const canvas = document.getElementById('sig-supervisor');
         window.padSup = new SignaturePad(canvas);
 
+        // Compensation Calculator
         const calcInputs = document.querySelectorAll('.calc');
         calcInputs.forEach(input => {
             input.addEventListener('input', () => {
                 const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
                 const total = getVal('basic') + getVal('meal') + getVal('transpo') + getVal('comm') + getVal('internet');
-                document.getElementById('total').value = "₱ " + total.toLocaleString();
+                document.getElementById('total').value = "₱ " + total.toLocaleString('en-PH', {minimumFractionDigits: 2});
             });
         });
 
+        // Form Submit to Firestore
         document.getElementById('mrfForm').onsubmit = async (e) => {
             e.preventDefault();
-            if(padSup.isEmpty()) return alert("Pirma muna bago isumite.");
+            if(padSup.isEmpty()) return alert("Supervisor's signature is mandatory for approval cycle.");
 
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
+            
+            // Add System Metadata
             data.signature_supervisor = padSup.toDataURL();
             data.status = "PENDING_DEPT_HEAD";
             data.submittedAt = new Date();
 
             try {
                 await addDoc(collection(db, "mrf_requests"), data);
-                alert("Successfully Submitted to iMerch Cloud!");
+                alert("SUCCESS: Manpower Request has been logged and sent for approval cycle.");
                 showSection('dashboard');
                 e.target.reset();
                 padSup.clear();
             } catch (err) {
-                alert("Error sending: " + err.message);
+                alert("FIREBASE ERROR: " + err.message);
             }
         };
     </script>
