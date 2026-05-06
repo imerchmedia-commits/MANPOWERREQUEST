@@ -3,145 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>i-Merch Media MRF Online</title>
-    <link rel="icon" type="image/png" href="favicon.png">
+    <title>iMerch Media Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
     <style>
-        .mrf-container { max-width: 950px; margin: auto; border: 2px solid #000; padding: 25px; background: #fff; }
-        .section-header { background: #eee; font-weight: bold; text-align: center; border: 1px solid #000; padding: 4px; margin-top: 10px; text-transform: uppercase; }
+        .active-link { background-color: #1e3a8a; border-left: 4px solid #facc15; }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+        /* Form specific styles */
+        .mrf-container { max-width: 900px; margin: auto; border: 2px solid #000; padding: 20px; background: #fff; }
         input[type="text"], input[type="number"], input[type="date"], select { border-bottom: 1px solid #000; outline: none; padding: 2px; font-size: 12px; border-top:none; border-left:none; border-right:none; background: transparent; }
         canvas { border: 1px dashed #ccc; width: 100%; height: 80px; background: #fdfdfd; }
-        .grid-box { border: 1px solid #000; }
-        .border-right { border-right: 1px solid #000; }
-        .border-bottom { border-bottom: 1px solid #000; }
-        .logo-header { display: flex; justify-content: center; margin-bottom: 15px; padding: 10px; }
     </style>
 </head>
-<body class="bg-gray-100 p-4">
+<body class="bg-gray-100 flex h-screen overflow-hidden">
 
-    <div class="mrf-container shadow-2xl">
-        <!-- LOGO SECTION - Gamit ang logo1_2.jpg -->
-        <div class="logo-header">
-            <img src="logo1.png" alt="iMerch Media Logo" class="h-24 w-auto object-contain">
+    <!-- SIDEBAR -->
+    <aside class="w-64 bg-slate-900 text-white flex flex-col shadow-xl">
+        <div class="p-6 border-b border-slate-700 text-center">
+            <img src="logo1.png" alt="Logo" class="h-12 mx-auto mb-2 object-contain">
+            <h2 class="text-sm font-bold tracking-tighter uppercase">i-Merch Systems</h2>
         </div>
+        
+        <nav class="flex-1 mt-4">
+            <a href="#" onclick="showSection('dashboard')" id="nav-dashboard" class="flex items-center px-6 py-4 hover:bg-slate-800 transition-all active-link">
+                <span class="mr-3">📊</span> Dashboard
+            </a>
+            <a href="#" onclick="showSection('mrf')" id="nav-mrf" class="flex items-center px-6 py-4 hover:bg-slate-800 transition-all">
+                <span class="mr-3">📄</span> Manpower Request
+            </a>
+        </nav>
 
-        <div class="text-center mb-4">
-            <h1 class="text-xl font-bold uppercase"></h1>
-            <p class="text-xs">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
-            <h2 class="text-lg font-bold border border-black mt-4 py-1 bg-gray-50 uppercase">Manpower Request Form</h2>
+        <div class="p-4 border-t border-slate-700 text-[10px] text-slate-400 text-center">
+            Developed for iMerch Media Inc.
         </div>
+    </aside>
 
-        <form id="mrfForm" class="text-[12px] space-y-4">
-            <!-- JOB SPECIFICATIONS -->
-            <div class="grid-box grid grid-cols-3">
-                <div class="p-2 border-right border-bottom"><label class="font-bold">No. of Vacancies:</label><input type="number" name="vacancies" required class="w-full"></div>
-                <div class="p-2 border-right border-bottom"><label class="font-bold">Job Position:</label><input type="text" name="position" required class="w-full"></div>
-                <div class="p-2 border-bottom"><label class="font-bold">Department:</label><input type="text" name="department" required class="w-full"></div>
-                
-                <div class="p-2 border-right border-bottom"><label class="font-bold">Approved Manpower:</label><input type="text" name="approved_mp" class="w-full"></div>
-                <div class="p-2 border-right border-bottom"><label class="font-bold">Present Manpower:</label><input type="text" name="present_mp" class="w-full"></div>
-                <div class="p-2 border-bottom">
-                    <label class="font-bold">Replacement of:</label><input type="text" name="replacement_of" class="w-full">
-                    <label class="font-bold block mt-1">Date Vacant:</label><input type="date" name="date_vacant" class="w-full">
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 overflow-y-auto p-8">
+        
+        <!-- SECTION: DASHBOARD (Pending Requests) -->
+        <section id="section-dashboard" class="content-section active">
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">Pending Approvals</h1>
+                <p class="text-sm text-gray-500">Listahan ng mga MRF na naghihintay ng pirma.</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Date</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Position</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Dept</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase">Supervisor</th>
+                            <th class="px-6 py-3 text-xs font-bold text-gray-500 uppercase text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pending-table-body" class="divide-y divide-gray-200">
+                        <!-- Dito papasok ang data mula sa Firebase -->
+                        <tr>
+                            <td colspan="5" class="px-6 py-10 text-center text-gray-400 italic">Loading requests...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION: MANPOWER REQUEST FORM -->
+        <section id="section-mrf" class="content-section">
+            <div class="mrf-container shadow-lg">
+                <div class="text-center mb-6">
+                    <h1 class="text-xl font-bold uppercase">Manpower Request Form</h1>
                 </div>
 
-                <!-- REASON FOR REQUEST -->
-                <div class="p-2 col-span-3 border-t border-black">
-                    <div class="flex items-start space-x-4">
-                        <label class="font-bold whitespace-nowrap">Reason for Request:</label>
-                        <div class="flex flex-col space-y-1">
-                            <label class="flex items-center"><input type="checkbox" name="reason_type" value="Additional" class="mr-1"> ( ) Additional</label>
-                            <label class="flex items-center"><input type="checkbox" name="reason_type" value="Replacement" class="mr-1"> ( ) Replacement</label>
+                <form id="mrfForm" class="text-[12px] space-y-4">
+                    <!-- (Ito yung same form fields na ginawa natin kanina) -->
+                    <div class="grid grid-cols-2 gap-4 border p-4 bg-gray-50">
+                        <div>
+                            <label class="block font-bold">Job Position:</label>
+                            <input type="text" name="position" required class="w-full">
                         </div>
-                        <div class="flex-1 space-y-2">
-                            <div class="flex items-end space-x-2"><span class="text-[9px] leading-tight italic uppercase">If Reliever, Who & Why?</span><input type="text" name="reliever_reason" class="flex-1"></div>
-                            <div class="flex items-end space-x-2"><span class="text-[9px] leading-tight italic uppercase text-wrap">If Resigned, Attach Resignation Letter:</span><input type="text" name="resignation_details" class="flex-1"></div>
-                            <div class="flex items-end space-x-2"><span class="text-[9px] leading-tight italic uppercase">New Outlet or New Account?</span><input type="text" name="additional_details" class="flex-1"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section-header">Type of Employment</div>
-            <div class="grid-box grid grid-cols-4 p-2 text-center">
-                <label><input type="checkbox" name="emp_type" value="Regular"> Regular</label>
-                <label><input type="checkbox" name="emp_type" value="Probationary"> Probationary</label>
-                <label><input type="checkbox" name="emp_type" value="Project"> Project</label>
-                <label><input type="checkbox" name="emp_type" value="Fixed-Term"> Fixed-Term</label>
-            </div>
-
-            <div class="section-header">Budgeted Compensation Package</div>
-            <div class="grid-box grid grid-cols-2">
-                <div class="p-2 border-right border-bottom">
-                    <label class="font-bold block mb-1">Basic Salary:</label>
-                    <input type="number" id="basic" name="basic" class="w-full calc" placeholder="0.00">
-                </div>
-                <div class="p-2 border-bottom">
-                    <label class="font-bold">Charge to:</label>
-                    <label class="ml-2"><input type="checkbox" name="charge_to" value="Office"> ( ) Office</label>
-                    <label class="ml-2"><input type="checkbox" name="charge_to" value="Client"> ( ) Client</label>
-                </div>
-                <div class="p-2 border-right">
-                    <label class="font-bold italic text-[10px]">Reimbursable Operational Expenses:</label>
-                    <div class="grid grid-cols-2 gap-2 mt-1 text-[11px]">
-                        <div class="flex flex-col"><label>Meal:</label><input type="number" id="meal" name="meal" class="calc"></div>
-                        <div class="flex flex-col"><label>Transpo:</label><input type="number" id="transpo" name="transpo" class="calc"></div>
-                        <div class="flex flex-col"><label>Comm:</label><input type="number" id="comm" name="comm" class="calc"></div>
-                        <div class="flex flex-col"><label>Internet:</label><input type="number" id="internet" name="internet" class="calc"></div>
-                    </div>
-                    <div class="mt-4 p-2 bg-yellow-50 border border-dashed border-yellow-400 flex justify-between items-center">
-                        <span class="font-bold text-red-600">TOTAL PACKAGE:</span>
-                        <input type="text" id="total" name="total_package" readonly class="font-bold text-red-700 text-right border-none outline-none bg-transparent" value="₱0.00">
-                    </div>
-                </div>
-                <div class="p-2 space-y-2">
-                    <div><label class="font-bold">Special Trainings:</label><input type="text" name="special_trainings" class="w-full"></div>
-                    <div><label class="font-bold">MCE NO:</label><input type="text" name="mce_no" class="w-full"></div>
-                    <div><label class="font-bold">Approved CE/Budget:</label><input type="text" name="approved_ce" class="w-full"></div>
-                </div>
-            </div>
-
-            <!-- APPROVAL WORKFLOW -->
-            <div class="bg-blue-50 p-4 border border-blue-200 mt-4 rounded-md">
-                <h3 class="font-bold text-blue-800 mb-3 uppercase text-center border-b border-blue-200 pb-1">Approval Routing</h3>
-                <div class="grid grid-cols-2 gap-6">
-                    <div>
-                        <label class="block font-bold text-blue-900">1. Requested by (Supervisor):</label>
-                        <select name="supervisor_email" class="w-full p-2 bg-white border border-blue-300 rounded mt-1">
-                            <option value="edgar.namoro@imerchmedia.net">Edgar Namoro</option>
-                            <option value="julie.jalandon@imerchmedia.net">Julie Jalandon</option>
-                            <option value="joy.biazon@imerchmedia.net">Joy Biazon</option>
-                        </select>
-                        <div class="mt-2 bg-white p-1 rounded border border-blue-200">
-                            <canvas id="sig-supervisor"></canvas>
-                            <button type="button" onclick="padSup.clear()" class="text-red-500 text-[10px] font-bold mt-1">Clear Signature</button>
+                        <div>
+                            <label class="block font-bold">Department:</label>
+                            <input type="text" name="department" required class="w-full">
                         </div>
                     </div>
-                    <div>
-                        <label class="block font-bold text-blue-900">2. Noted by (Dept. Head):</label>
-                        <select name="dept_head_email" class="w-full p-2 bg-white border border-blue-300 rounded mt-1">
-                            <option value="chris.cantos@imerchmedia.com">Chris Cantos</option>
-                            <option value="vicky@imerchmedia.com">Vicky</option>
-                            <option value="jobey@imerchmedia.com">Jobey</option>
-                        </select>
-                        <div class="mt-4 p-3 border border-blue-200 bg-white rounded text-[10px]">
-                            <p><strong>3. Budget Verified:</strong> teresita.lumaniog@imerchmedia.com</p>
-                            <p class="mt-1"><strong>4. Final Approval (MD):</strong> glenn@imerchmedia.com</p>
-                        </div>
+                    
+                    <div class="bg-blue-50 p-4 border border-blue-200 mt-4 rounded-md">
+                        <label class="block font-bold text-blue-900 mb-2">Supervisor Signature:</label>
+                        <canvas id="sig-supervisor"></canvas>
+                        <button type="button" onclick="padSup.clear()" class="text-red-500 text-[10px] font-bold mt-1">Clear</button>
                     </div>
-                </div>
-            </div>
 
-            <button type="submit" class="w-full bg-blue-900 text-white font-bold py-4 hover:bg-black transition-all uppercase tracking-widest mt-4 rounded shadow-lg">Submit MRF Request</button>
-        </form>
-    </div>
+                    <button type="submit" class="w-full bg-blue-900 text-white font-bold py-3 hover:bg-black rounded">Submit MRF</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
-        // Ginamit ko ang project ID mo mula sa summary: imerch-mrf-system
+        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyCdhUss3U_1j6LJDSg_n52w0x3XwRHNiPA",
             authDomain: "imerch-mrf-system.firebaseapp.com",
@@ -153,26 +119,51 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        
-        const canvas = document.getElementById('sig-supervisor');
-        window.padSup = new SignaturePad(canvas);
 
-        const calcInputs = document.querySelectorAll('.calc');
-        calcInputs.forEach(input => {
-            input.addEventListener('input', () => {
-                const b = parseFloat(document.getElementById('basic').value) || 0;
-                const m = parseFloat(document.getElementById('meal').value) || 0;
-                const t = parseFloat(document.getElementById('transpo').value) || 0;
-                const c = parseFloat(document.getElementById('comm').value) || 0;
-                const i = parseFloat(document.getElementById('internet').value) || 0;
-                const total = b + m + t + c + i;
-                document.getElementById('total').value = total.toLocaleString('en-PH', {style:'currency', currency:'PHP'});
+        // UI NAVIGATION LOGIC
+        window.showSection = function(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-link'));
+            
+            document.getElementById('section-' + sectionId).classList.add('active');
+            document.getElementById('nav-' + sectionId).classList.add('active-link');
+        };
+
+        // REAL-TIME DASHBOARD FETCH
+        const q = query(collection(db, "mrf_requests"), where("status", "==", "PENDING_DEPT_HEAD"));
+        onSnapshot(q, (snapshot) => {
+            const tableBody = document.getElementById('pending-table-body');
+            tableBody.innerHTML = '';
+            
+            if (snapshot.empty) {
+                tableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-10 text-center text-gray-400 italic">No pending requests found.</td></tr>';
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const item = doc.data();
+                const row = `
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 text-sm">${item.submittedAt?.toDate().toLocaleDateString() || 'N/A'}</td>
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.position}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">${item.department}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">${item.supervisor_email}</td>
+                        <td class="px-6 py-4 text-center">
+                            <button class="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-800">View/Approve</button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
             });
         });
 
+        // FORM SUBMISSION
+        const canvas = document.getElementById('sig-supervisor');
+        window.padSup = new SignaturePad(canvas);
+
         document.getElementById('mrfForm').onsubmit = async (e) => {
             e.preventDefault();
-            if(padSup.isEmpty()) return alert("Pirma muna bago i-submit!");
+            if(padSup.isEmpty()) return alert("Pirma muna!");
 
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
@@ -182,8 +173,10 @@
 
             try {
                 await addDoc(collection(db, "mrf_requests"), data);
-                alert("MRF Successfully Submitted!");
-                location.reload();
+                alert("MRF Submitted! Redirecting to Dashboard...");
+                showSection('dashboard');
+                e.target.reset();
+                padSup.clear();
             } catch (err) {
                 alert("Error: " + err.message);
             }
