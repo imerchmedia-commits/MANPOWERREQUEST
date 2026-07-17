@@ -3,361 +3,475 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>i-Merch Media Portal - Enterprise Resource System</title>
-    
-    <link rel="icon" type="image/png" href="favicon.png">
-    
+    <title>iMerch Media - Manpower Request Portal</title>
+    <!-- FAVICON INTEGRATION -->
+    <link class="js-meta-favicon" rel="icon" type="image/png" href="favicon.png">
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function() { emailjs.init("YOUR_PUBLIC_KEY_HERE"); })();
-    </script>
-    
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: all 0.3s ease; }
-        .active-link { background-color: #1e3a8a; border-left: 4px solid #facc15; }
         .content-section { display: none; }
-        .content-section.active { display: block; animation: fadeIn 0.4s ease-out; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .mrf-container { 
-            max-width: 950px; 
-            margin: 20px auto; 
-            border: 2px solid #000; 
-            padding: 40px; 
-            background: #fff; 
-            position: relative;
-        }
-        .section-header { 
-            background: #f3f4f6; 
-            font-weight: 900; 
-            text-align: center; 
-            border: 1px solid #000; 
-            padding: 8px; 
-            margin-top: 20px; 
-            text-transform: uppercase; 
-            font-size: 13px; 
-            letter-spacing: 1px;
-        }
-        input[type="text"], input[type="number"], input[type="date"], select { 
-            border-bottom: 1px solid #000; 
-            outline: none; 
-            padding: 4px; 
-            font-size: 13px; 
-            border-top:none; 
-            border-left:none; 
-            border-right:none; 
-            background: transparent;
+        .content-section.active { display: block; }
+        .active-link { background-color: #0f172a; color: #ffffff; border-left: 4px solid #3b82f6; }
+        input[type="text"], input[type="number"], input[type="date"], select {
+            border-bottom: 2px solid #0f172a;
+            outline: none;
+            padding: 2px 0;
+            font-size: 0.875rem;
+            font-weight: 700;
             width: 100%;
+            text-transform: uppercase;
         }
-        .grid-box { border: 1px solid #000; margin-top: -1px; }
-        .border-right { border-right: 1px solid #000; }
-        .border-bottom { border-bottom: 1px solid #000; }
-        
-        canvas { 
-            border: 1px dashed #94a3b8; 
-            width: 100%; 
-            height: 100px; 
-            background: #fcfcfc; 
-            border-radius: 4px;
+        input:focus { border-color: #2563eb; }
+        label {
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            tracking-wider: 0.05em;
+            color: #1e293b;
+            display: block;
+            margin-bottom: 2px;
         }
-        .signature-placeholder {
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f1f5f9;
-            color: #64748b;
-            font-style: italic;
+        .section-bar {
+            background-color: #f8fafc;
+            padding: 6px;
             font-size: 11px;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-top: 2px solid #0f172a;
+            border-bottom: 2px solid #0f172a;
             text-align: center;
-            padding: 10px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
         }
-
-        /* PRINT STYLES */
-        @media print {
-            body > *:not(#print-area) { 
-                display: none !important; 
-            }
-            #print-area { 
-                display: block !important; 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100%; 
-            }
-            .print-table { width: 100%; border-collapse: collapse; }
-            .print-table td, .print-table th { border: 1px solid black; padding: 8px; font-size: 12px; }
-            .print-header { background: #111827 !important; color: white !important; -webkit-print-color-adjust: exact; }
+        
+        /* Glassmorphism Classes for Login */
+        .glass-bg {
+            background: radial-gradient(circle at top left, #1e293b, #0f172a);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px) saturate(120%);
+            -webkit-backdrop-filter: blur(16px) saturate(120%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.25);
+            outline: none;
+        }
+        .glass-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-btn:hover {
+            background: linear-gradient(135deg, #60a5fa, #2563eb);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            transform: translateY(-1px);
         }
     </style>
 </head>
-<body class="bg-slate-100 flex h-screen overflow-hidden">
+<body class="bg-slate-100 font-sans antialiased flex min-h-screen">
 
-    <!-- SIDEBAR -->
-    <aside class="w-80 bg-slate-900 text-white flex flex-col shadow-2xl shrink-0">
-        <div class="p-10 border-b border-slate-800 text-center">
-            <img src="logo1.png" alt="iMerch Logo" class="h-14 mx-auto mb-4 object-contain">
-            <h2 class="text-sm font-black tracking-[0.2em] uppercase text-blue-400">i-Merch Systems</h2>
-            <p class="text-[10px] text-slate-500 mt-2 font-medium">Enterprise Resource Portal</p>
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="w-80 bg-slate-900 text-slate-400 flex flex-col shadow-xl fixed h-full z-40">
+        <div class="p-8 border-b border-slate-800 flex items-center space-x-3">
+            <div class="h-3 w-3 rounded-full bg-green-500 animate-pulse"></div>
+            <span class="text-white font-black text-xs tracking-[0.2em] uppercase">iMerch MRF System v2.0</span>
         </div>
         
-        <nav class="flex-1 mt-8">
-            <a href="#" onclick="showSection('dashboard')" id="nav-dashboard" class="flex items-center px-10 py-5 hover:bg-slate-800 transition-all active-link group">
-                <span class="mr-4 text-xl group-hover:scale-110 transition-transform">📊</span> 
-                <span class="font-bold text-sm tracking-widest uppercase">Dashboard</span>
+        <nav class="flex-1 mt-8 space-y-1">
+            <a href="#" id="nav-dashboard" onclick="showSection('dashboard')" class="flex items-center px-8 py-4 transition-all group active-link">
+                <span class="mr-4 text-lg">📊</span>
+                <span class="font-bold text-sm uppercase tracking-wider">Dashboard</span>
             </a>
-            <a href="#" onclick="showSection('mrf')" id="nav-mrf" class="flex items-center px-10 py-5 hover:bg-slate-800 transition-all group">
-                <span class="mr-4 text-xl group-hover:scale-110 transition-transform">📄</span> 
-                <span class="font-bold text-sm tracking-widest uppercase">Manpower Request</span>
-            </a>
-            <a href="#" class="flex items-center px-10 py-5 opacity-40 cursor-not-allowed">
-                <span class="mr-4 text-xl">👤</span> 
-                <span class="font-bold text-sm tracking-widest uppercase">201 Master Files</span>
+            <a href="#" id="nav-mrf" onclick="showSection('mrf')" class="flex items-center px-8 py-4 transition-all group">
+                <span class="mr-4 text-lg">📝</span>
+                <span class="font-bold text-sm uppercase tracking-wider">Create Request</span>
             </a>
         </nav>
 
-        <div class="p-8 border-t border-slate-800 text-[11px] text-slate-500 text-center">
-            <p class="font-bold text-slate-400">i-Merch Media Inc.</p>
-            <p class="mt-1 font-mono tracking-tighter">BUILD v2.0.2026.05</p>
-        </div>
+        <!-- Sidebar Sign Out Button -->
+        <a href="#" onclick="logoutUser()" class="flex items-center px-8 py-5 hover:bg-red-950 text-red-400 transition-all group mt-auto border-t border-slate-800/50">
+            <span class="mr-4 text-lg group-hover:scale-110 transition-transform">🚪</span> 
+            <span class="font-bold text-sm tracking-widest uppercase">Sign Out System</span>
+        </a>
     </aside>
 
-    <main class="flex-1 overflow-y-auto p-12 bg-[#f8fafc]">
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 ml-80 flex flex-col min-h-screen">
         
-        <!-- DASHBOARD SECTION -->
-        <section id="section-dashboard" class="content-section active">
-            <div class="flex justify-between items-end mb-10 border-b pb-6">
-                <div>
-                    <h1 class="text-4xl font-black text-slate-900 tracking-tight">Approval Monitoring</h1>
-                    <p class="text-slate-500 mt-2">Real-time status of submitted Manpower Request Forms.</p>
-                </div>
-                <div class="flex items-center bg-white px-5 py-3 rounded-xl shadow-sm border border-slate-200">
-                    <span class="h-3 w-3 bg-green-500 rounded-full animate-pulse mr-3"></span>
-                    <span class="text-xs font-black text-slate-700 uppercase tracking-widest">Firebase Live Sync</span>
-                </div>
-            </div>
+        <!-- Content Body Wrapper -->
+        <div class="flex-1 p-12 overflow-y-auto">
             
-            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-slate-50 border-b-2 border-slate-100">
-                        <tr>
-                            <th class="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.15em]">Date Filed</th>
-                            <th class="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.15em]">Position Title</th>
-                            <th class="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.15em]">Department</th>
-                            <th class="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.15em]">Current Status</th>
-                            <th class="px-8 py-5 text-[11px] font-black text-slate-500 uppercase tracking-[0.15em] text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pending-table-body" class="divide-y divide-slate-50">
-                        <tr>
-                            <td colspan="5" class="px-8 py-20 text-center">
-                                <div class="flex flex-col items-center opacity-40">
-                                    <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-                                    <span class="font-bold uppercase tracking-widest text-xs">Accessing i-Merch Cloud Database...</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- MRF FORM SECTION -->
-        <section id="section-mrf" class="content-section">
-            <div class="mrf-container shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]">
-                <div class="text-center mb-8">
-                    <img src="logo1.png" class="h-20 mx-auto mb-4 object-contain">
-                    <p class="text-[12px] font-black text-gray-800 tracking-[0.2em] uppercase">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
-                    <div class="h-[3px] bg-black w-full my-4"></div>
-                    <h1 class="text-3xl font-black uppercase tracking-[0.3em] text-white py-4 bg-slate-900 border-2 border-black">Manpower Request Form</h1>
+            <!-- SECTION 1: DASHBOARD -->
+            <section id="section-dashboard" class="content-section active space-y-8">
+                <div class="flex justify-between items-center border-b border-slate-200 pb-6">
+                    <div>
+                        <h1 class="text-3xl font-black text-slate-900 tracking-tight uppercase">Manpower Approvals Route</h1>
+                        <p class="text-xs text-slate-500 mt-1">Real-time tracking of organizational personnel requests.</p>
+                    </div>
                 </div>
 
-                <form id="mrfForm" class="text-[13px] space-y-0">
-                    <!-- BOX 1: JOB SPECS -->
-                    <div class="grid-box grid grid-cols-3">
-                        <div class="p-4 border-right border-bottom bg-slate-50/50">
-                            <label class="font-black block text-[10px] text-blue-900 mb-1 uppercase">No. of Vacancies:</label>
-                            <input type="number" name="vacancies" required class="font-bold text-lg">
+                <div class="bg-white rounded-2xl border-2 border-slate-900 shadow-xl overflow-hidden">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900 text-white text-[10px] font-black tracking-widest uppercase border-b border-slate-950">
+                                <th class="px-8 py-5">Date Filed</th>
+                                <th class="px-8 py-5">Requested Position</th>
+                                <th class="px-8 py-5">Department</th>
+                                <th class="px-8 py-5">Current Status</th>
+                                <th class="px-8 py-5 text-center">Workflow Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pending-table-body" class="divide-y divide-slate-100">
+                            <tr>
+                                <td colspan="5" class="px-8 py-20 text-center text-slate-400 font-bold uppercase tracking-widest">Awaiting Verification State...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION 2: MRF SUBMISSION FORM -->
+            <section id="section-mrf" class="content-section space-y-8">
+                <div class="max-w-4xl mx-auto bg-white border-2 border-slate-900 shadow-2xl p-8 rounded-sm text-slate-900">
+                    
+                    <!-- Form Header -->
+                    <div class="text-center border-b-2 border-slate-900 pb-2 mb-4 flex flex-col items-center">
+                        <img src="logo1.png" alt="iMerch Media Inc. Logo" class="h-12 w-auto mb-2 object-contain">
+                        <p class="text-[9px] font-bold text-slate-500 tracking-wider uppercase">7372 MALINAO STREET, BRGY. MALINAO, MANDALUYONG CITY</p>
+                        <div class="bg-slate-900 text-white font-black text-lg py-2 mt-4 tracking-[0.2em] w-full uppercase">
+                            MANPOWER REQUEST FORM
                         </div>
-                        <div class="p-4 border-right border-bottom">
-                            <label class="font-black block text-[10px] text-blue-900 mb-1 uppercase">Job Position:</label>
-                            <input type="text" name="position" required class="font-bold text-lg uppercase">
-                        </div>
-                        <div class="p-4 border-bottom">
-                            <label class="font-black block text-[10px] text-blue-900 mb-1 uppercase">Department:</label>
-                            <input type="text" name="department" required class="font-bold text-lg uppercase">
-                        </div>
+                    </div>
+
+                    <form id="mrf-form-element" class="space-y-4">
                         
-                        <div class="p-4 border-right border-bottom">
-                            <label class="font-black block text-[10px] text-gray-500 mb-1 uppercase">Approved Manpower:</label>
-                            <input type="text" name="approved_mp" class="font-medium">
-                        </div>
-                        <div class="p-4 border-right border-bottom">
-                            <label class="font-black block text-[10px] text-gray-500 mb-1 uppercase">Present Manpower:</label>
-                            <input type="text" name="present_mp" class="font-medium">
-                        </div>
-                        <div class="p-4 border-bottom">
-                            <label class="font-black block text-[10px] text-gray-500 mb-1 uppercase">Replacement Of:</label>
-                            <input type="text" name="replacement_of" class="font-medium mb-3">
-                            <label class="font-black block text-[10px] text-gray-500 mb-1 uppercase">Date Vacant:</label>
-                            <input type="date" name="date_vacant" class="font-medium">
+                        <!-- Row 1 -->
+                        <div class="grid grid-cols-3 gap-6">
+                            <div>
+                                <label>No. of Personnel</label>
+                                <input type="number" id="mrf-qty" required>
+                            </div>
+                            <div>
+                                <label>Job Position</label>
+                                <input type="text" id="mrf-position" required>
+                            </div>
+                            <div>
+                                <label>Department</label>
+                                <input type="text" id="mrf-department" required>
+                            </div>
                         </div>
 
-                        <div class="p-4 col-span-3 border-t border-black bg-blue-50/30">
-                            <span class="font-black mr-10 uppercase text-xs tracking-wider">Reason for Request:</span>
-                            <label class="mr-10 font-bold cursor-pointer inline-flex items-center"><input type="checkbox" name="reason" value="Additional" class="w-4 h-4 mr-2"> ADDITIONAL</label>
-                            <label class="font-bold cursor-pointer inline-flex items-center"><input type="checkbox" name="reason" value="Replacement" class="w-4 h-4 mr-2"> REPLACEMENT</label>
+                        <!-- Row 2 -->
+                        <div class="grid grid-cols-3 gap-6">
+                            <div>
+                                <label>Approved Manpower</label>
+                                <input type="number" id="mrf-approved-mp">
+                            </div>
+                            <div>
+                                <label>Present Manpower</label>
+                                <input type="number" id="mrf-present-mp">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label>Replacement Of</label>
+                                    <input type="text" id="mrf-replacement-of">
+                                </div>
+                                <div>
+                                    <label>Date Vacant</label>
+                                    <input type="date" id="mrf-date-vacant" style="text-transform: none;">
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- BOX 2: EMPLOYMENT TYPE -->
-                    <div class="section-header">Type of Employment</div>
-                    <div class="grid-box">
-                        <div class="grid grid-cols-4 p-5 text-center font-black text-[11px] bg-white">
-                            <label class="flex items-center justify-center"><input type="checkbox" name="emp_type" value="Regular" class="mr-2"> REGULAR</label>
-                            <label class="flex items-center justify-center"><input type="checkbox" name="emp_type" value="Probationary" class="mr-2"> PROBATIONARY</label>
-                            <label class="flex items-center justify-center"><input type="checkbox" name="emp_type" value="Project" class="mr-2"> PROJECT</label>
-                            <label class="flex items-center justify-center"><input type="checkbox" name="emp_type" value="Fixed-Term" class="mr-2"> FIXED-TERM</label>
-                        </div>
-                        <div class="p-5 border-t border-black flex items-center justify-center space-x-12 bg-slate-50">
-                            <div class="flex items-center">
-                                <span class="font-black mr-4 text-xs">DURATION:</span>
-                                <span class="mr-2 text-[10px] font-bold">START:</span> <input type="date" name="start_date" class="!w-40">
-                            </div>
-                            <div class="flex items-center">
-                                <span class="mr-2 text-[10px] font-bold">END:</span> <input type="date" name="end_date" class="!w-40">
+                        <!-- Reason for Request -->
+                        <div class="border-t border-slate-300 pt-2">
+                            <div class="flex items-center space-x-6">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-slate-800">Reason for Request:</span>
+                                <label class="inline-flex items-center font-bold text-xs normal-case mb-0">
+                                    <input type="radio" name="reason" value="ADDITIONAL" checked class="mr-2"> Additional
+                                </label>
+                                <label class="inline-flex items-center font-bold text-xs normal-case mb-0">
+                                    <input type="radio" name="reason" value="REPLACEMENT" class="mr-2"> Replacement
+                                </label>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- BOX 3: EDUCATIONAL ATTAINMENT -->
-                    <div class="section-header">Educational Attainment</div>
-                    <div class="grid-box">
-                        <div class="grid grid-cols-3 p-5 text-center border-bottom font-black text-[11px]">
-                            <label class="flex items-center justify-center"><input type="checkbox" name="educ" value="College" class="mr-2"> COLLEGE</label>
-                            <label class="flex items-center justify-center"><input type="checkbox" name="educ" value="High School" class="mr-2"> HIGH SCHOOL</label>
-                            <label class="flex items-center justify-center"><input type="checkbox" name="educ" value="Elementary" class="mr-2"> ELEMENTARY</label>
+                        <!-- Type of Employment -->
+                        <div class="section-bar">Type of Employment</div>
+                        <div class="grid grid-cols-4 gap-4 text-xs font-bold px-2">
+                            <label class="inline-flex items-center normal-case"><input type="radio" name="type" value="REGULAR" checked class="mr-2"> Regular</label>
+                            <label class="inline-flex items-center normal-case"><input type="radio" name="type" value="PROBATIONARY" class="mr-2"> Probationary</label>
+                            <label class="inline-flex items-center normal-case"><input type="radio" name="type" value="PROJECT" class="mr-2"> Project</label>
+                            <label class="inline-flex items-center normal-case"><input type="radio" name="type" value="FIXED-TERM" class="mr-2"> Fixed-Term</label>
                         </div>
-                        <div class="grid grid-cols-2">
-                            <div class="p-6 border-right flex flex-col justify-center space-y-4 bg-slate-50/50">
-                                <label class="font-black flex items-center"><input type="checkbox" name="grad_status" value="Graduate" class="w-5 h-5 mr-3"> GRADUATE</label>
-                                <label class="font-black flex items-center"><input type="checkbox" name="grad_status" value="Undergraduate" class="w-5 h-5 mr-3"> UNDERGRADUATE</label>
-                            </div>
-                            <div class="p-6">
-                                <label class="font-black block text-[10px] text-gray-500 mb-2 uppercase">Specific Course Taken:</label>
-                                <input type="text" name="course" class="w-full font-black text-lg" placeholder="e.g. BS Information Technology">
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- BOX 4: COMPENSATION CALCULATOR -->
-                    <div class="section-header">Budgeted Compensation Package</div>
-                    <div class="grid-box grid grid-cols-2">
-                        <div class="p-6 border-right border-bottom bg-white">
-                            <label class="font-black block text-[10px] text-blue-900 mb-2 uppercase">Monthly Basic Salary:</label>
-                            <div class="flex items-center">
-                                <span class="mr-2 font-black text-lg">₱</span>
-                                <input type="number" id="basic" name="basic" class="w-full font-black text-2xl calc text-blue-700" placeholder="0.00">
+                        <!-- Duration -->
+                        <div class="flex items-center space-x-4 px-2 pt-2 bg-slate-50 p-2 rounded border border-slate-200">
+                            <span class="text-[9px] font-black text-slate-700">DURATION:</span>
+                            <div class="flex items-center space-x-2">
+                                <label class="text-[9px] mb-0">Start</label>
+                                <input type="date" id="mrf-duration-start" style="width:130px; text-transform:none;">
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <label class="text-[9px] mb-0">End</label>
+                                <input type="date" id="mrf-duration-end" style="width:130px; text-transform:none;">
                             </div>
                         </div>
-                        <div class="p-6 border-bottom bg-slate-50">
-                            <label class="font-black block mb-4 text-xs uppercase tracking-widest text-gray-600 border-b pb-2">Charge To:</label>
-                            <div class="flex space-x-10">
-                                <label class="font-black flex items-center cursor-pointer"><input type="checkbox" name="charge" value="Office" class="w-5 h-5 mr-3"> OFFICE</label>
-                                <label class="font-black flex items-center cursor-pointer"><input type="checkbox" name="charge" value="Client" class="w-5 h-5 mr-3"> CLIENT</label>
-                            </div>
-                        </div>
-                        <div class="p-6 border-right bg-white">
-                            <label class="italic font-black text-[11px] text-blue-800 uppercase tracking-tighter mb-4 block">Reimbursable Operational Expenses:</label>
-                            <div class="grid grid-cols-2 gap-6">
-                                <div><span class="text-[10px] font-bold block mb-1">MEAL:</span><input type="number" name="meal" class="calc font-bold" placeholder="0"></div>
-                                <div><span class="text-[10px] font-bold block mb-1">TRANSPO:</span><input type="number" name="transpo" class="calc font-bold" placeholder="0"></div>
-                                <div><span class="text-[10px] font-bold block mb-1">COMM:</span><input type="number" name="comm" class="calc font-bold" placeholder="0"></div>
-                                <div><span class="text-[10px] font-bold block mb-1">INTERNET:</span><input type="number" name="internet" class="calc font-bold" placeholder="0"></div>
-                            </div>
-                            <div class="mt-8 p-5 bg-red-600 rounded shadow-inner flex justify-between items-center text-white">
-                                <span class="font-black text-sm tracking-[0.2em]">GROSS TOTAL:</span>
-                                <input type="text" id="total" name="total_package" readonly class="text-right font-black text-2xl border-none outline-none bg-transparent !text-white" value="₱ 0.00">
-                            </div>
-                        </div>
-                        <div class="p-6 space-y-6 bg-slate-50/50">
-                            <div><label class="font-black block text-[10px] text-gray-500 uppercase">Special Trainings Required:</label><input type="text" name="trainings" class="font-medium"></div>
-                            <div><label class="font-black block text-[10px] text-gray-500 uppercase">MCE No. (Reference):</label><input type="text" name="mce" class="font-medium"></div>
-                            <div><label class="font-black block text-[10px] text-gray-500 uppercase">Approved CE/Budget:</label><input type="text" name="budget" class="font-medium"></div>
-                        </div>
-                    </div>
 
-                    <!-- BOX 5: APPROVAL ROUTING -->
-                    <div class="bg-blue-900 p-8 border-2 border-black mt-10 rounded-xl shadow-2xl">
-                        <h3 class="text-center font-black text-white uppercase mb-8 text-sm tracking-[0.4em]">Approval Workflow Routing</h3>
-                        <div class="grid grid-cols-2 gap-8">
-                            <div class="bg-white p-6 border-2 border-blue-200 rounded-lg shadow-lg">
-                                <label class="font-black text-[11px] text-blue-900 block mb-3 border-b-2 border-blue-100 pb-2">1. REQUESTED BY (SUPERVISOR):</label>
-                                <select name="supervisor_email" id="supervisor_email" class="w-full font-black p-2 bg-blue-50 mb-4 rounded border-none">
-                                    <option value="edgar.namoro@imerchmedia.net">Edgar Namoro</option>
-                                    <option value="joy.biazon@imerchmedia.net">Joy Biazon</option>
-                                    <option value="julie.jalandon@imerchmedia.net">Julie Jalandon</option>
-                                    <option value="gladys.deguzman@imerchmedia.net">Gladys Deguzman</option>
-                                    <option value="jerome.ore@imerchmedia.net">Jerome Ore</option>
-                                    <option value="chris.cantos@imerchmedia.com">Christopher Cantos</option>
-                                </select>
-                                <div class="relative">
-                                    <canvas id="sig-supervisor"></canvas>
-                                    <button type="button" onclick="padSup.clear()" class="absolute bottom-2 right-2 bg-red-600 text-white text-[9px] px-2 py-1 rounded font-black uppercase shadow-md">Clear Sign</button>
+                        <!-- Educational Attainment -->
+                        <div class="section-bar">Educational Attainment</div>
+                        <div class="grid grid-cols-3 gap-4 text-xs font-bold px-2 mb-2">
+                            <label class="inline-flex items-center normal-case"><input type="radio" name="edu-level" value="COLLEGE" checked class="mr-2"> College</label>
+                            <label class="inline-flex items-center normal-case"><input type="radio" name="edu-level" value="HIGH SCHOOL" class="mr-2"> High School</label>
+                            <label class="inline-flex items-center normal-case"><input type="radio" name="edu-level" value="ELEMENTARY" class="mr-2"> Elementary</label>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 border border-slate-300 p-3 bg-white">
+                            <div class="space-y-2">
+                                <label class="inline-flex items-center normal-case"><input type="radio" name="edu-status" value="GRADUATE" checked class="mr-2"> Graduate</label>
+                                <label class="inline-flex items-center normal-case"><input type="radio" name="edu-status" value="UNDERGRADUATE" class="mr-2"> Undergraduate</label>
+                            </div>
+                            <div>
+                                <label>Specific Course Taken:</label>
+                                <input type="text" id="mrf-course" placeholder="e.g. BS Information Technology">
+                            </div>
+                        </div>
+
+                        <!-- Budgeted Compensation Package -->
+                        <div class="section-bar">Budgeted Compensation Package</div>
+                        <div class="grid grid-cols-2 gap-4 items-start">
+                            <!-- Left Block: Salaries & Totals -->
+                            <div class="border border-slate-300 p-4 space-y-4">
+                                <div>
+                                    <label>Monthly Basic Salary:</label>
+                                    <div class="flex items-center border-b-2 border-slate-900">
+                                        <span class="font-black mr-1 text-sm">₱</span>
+                                        <input type="number" id="mrf-salary" value="0.00" class="border-none py-1">
+                                    </div>
+                                </div>
+                                
+                                <!-- Allowances -->
+                                <div class="bg-slate-50 p-3 rounded space-y-2">
+                                    <span class="text-[9px] font-black block border-b pb-1 text-blue-900">ALLOWANCES/OPERATIONAL EXPENSES</span>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-[8px]">Meal</label>
+                                            <input type="number" id="exp-meal" value="0" class="exp-calc text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="text-[8px]">Transpo</label>
+                                            <input type="number" id="exp-transpo" value="0" class="exp-calc text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="text-[8px]">Load</label>
+                                            <input type="number" id="exp-load" value="0" class="exp-calc text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="text-[8px]">Internet</label>
+                                            <input type="number" id="exp-internet" value="0" class="exp-calc text-xs">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Gross Total -->
+                                <div class="bg-red-600 text-white p-3 flex justify-between items-center rounded-sm shadow-inner">
+                                    <div class="font-black text-xs tracking-wider uppercase">Gross Total:</div>
+                                    <div class="font-black text-lg">₱ <span id="gross-total-val">0.00</span></div>
                                 </div>
                             </div>
 
-                            <div class="bg-white p-6 border-2 border-blue-200 rounded-lg shadow-lg">
-                                <label class="font-black text-[11px] text-blue-900 block mb-3 border-b-2 border-blue-100 pb-2">2. NOTED BY (DEPT. HEAD):</label>
-                                <select name="dept_head_email" id="dept_head_email" class="w-full font-black p-2 bg-blue-50 mb-4 rounded border-none">
-                                    <option value="chris.cantos@imerchmedia.com">Christopher Cantos</option>
-                                    <option value="vicky@imerchmedia.com">Vicky Carlos</option>
-                                    <option value="jobey@imerchmedia.com">Jobey Hernandez</option>
-                                </select>
-                                <div class="signature-placeholder">Awaiting signature via Dashboard login...</div>
-                            </div>
-
-                            <div class="bg-white p-6 border-2 border-blue-200 rounded-lg shadow-lg">
-                                <label class="font-black text-[11px] text-blue-900 block mb-2 border-b-2 border-blue-100 pb-2">3. BUDGET VERIFIED BY (FINANCE):</label>
-                                <p class="text-[11px] font-black text-slate-700 py-3 italic">teresita.lumaniog@imerchmedia.com</p>
-                                <div class="signature-placeholder">Awaiting Finance Verification</div>
-                            </div>
-
-                            <div class="bg-white p-6 border-2 border-red-200 rounded-lg shadow-lg">
-                                <label class="font-black text-[11px] text-red-900 block mb-2 border-b-2 border-red-100 pb-2">4. APPROVED BY (MANAGING DIRECTOR):</label>
-                                <p class="text-[11px] font-black text-slate-700 py-3 italic">glenn@imerchmedia.com</p>
-                                <div class="signature-placeholder bg-red-50/50">Awaiting Final MD Approval</div>
+                            <!-- Right Block: Charge to & Specific Requirements -->
+                            <div class="border border-slate-300 p-4 space-y-3">
+                                <div>
+                                    <span class="text-[10px] font-black uppercase tracking-wider block mb-1">Charge To:</span>
+                                    <div class="flex space-x-4 text-xs font-bold">
+                                        <label class="inline-flex items-center normal-case"><input type="radio" name="charge-to" value="OFFICE" checked class="mr-2"> Office</label>
+                                        <label class="inline-flex items-center normal-case"><input type="radio" name="charge-to" value="CLIENT" class="mr-2"> Client</label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>Special Training Required:</label>
+                                    <input type="text" id="mrf-training">
+                                </div>
+                                <div>
+                                    <label>Age/Sex Individual:</label>
+                                    <input type="text" id="mrf-pref-profile">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <button type="submit" class="w-full bg-blue-600 text-white font-black py-6 uppercase text-sm tracking-[0.5em] mt-12 hover:bg-black transition-all shadow-2xl rounded-xl border-4 border-blue-400 group">
-                        <span class="group-hover:scale-110 inline-block transition-transform">Submit for Approval Cycle</span>
-                    </button>
-                    
-                </form>
+                        <!-- APPROVAL WORKFLOW ROUTING BOX -->
+                        <div class="bg-slate-900 p-6 rounded-lg text-white mt-6 space-y-4 border-2 border-slate-950">
+                            <div class="text-center font-black text-xs tracking-[0.2em] uppercase border-b border-slate-800 pb-2 mb-4 text-blue-400">
+                                APPROVAL WORKFLOW ROUTING
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- 1. REQUESTED BY (Supervisor Dropdown Selector) -->
+                                <div class="bg-white p-4 rounded text-slate-900 border border-slate-200 flex flex-col justify-between">
+                                    <div>
+                                        <div class="text-[9px] font-black text-blue-900 uppercase">1. Requested By (Supervisor Approval):</div>
+                                        <label class="text-[8px] text-slate-500 font-bold mt-1 uppercase block">Select Filing Supervisor:</label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <select id="mrf-supervisor-email" required class="w-full text-xs font-bold border-b-2 border-slate-900 py-1 bg-slate-50 outline-none text-slate-800 cursor-pointer">
+                                            <option value="" disabled selected>-- SELECT SUPERVISOR --</option>
+                                            <option value="edgar.namoro@imerchmedia.com">EDGAR NAMORO</option>
+                                            <option value="jerome.ore@imerchmedia.com">JEROME ORE</option>
+                                            <option value="julie.jalandoon@imerchmedia.com">JULIE JALANDOON</option>
+                                            <option value="gladys.deguzman@imerchmedia.com">GLADYS DE GUZMAN</option>
+                                            <option value="pinky.delosangeles@imerchmedia.com">PINKY DELOS ANGELES</option>
+                                            <option value="joy.biazon@imerchmedia.com">JOY BIAZON</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- 2. NOTED BY DEPT HEAD (Interactive Dropdown Selection) -->
+                                <div class="bg-white p-4 rounded text-slate-900 border border-slate-200 flex flex-col justify-between">
+                                    <div>
+                                        <div class="text-[9px] font-black text-blue-900 uppercase">2. Noted By Dept Head:</div>
+                                        <label class="text-[8px] text-slate-500 font-bold mt-1 uppercase block">Select Approving Manager:</label>
+                                    </div>
+                                    <div class="mt-2">
+                                        <select id="mrf-dept-email" required class="w-full text-xs font-bold border-b-2 border-slate-900 py-1 bg-slate-50 outline-none text-slate-800 cursor-pointer">
+                                            <option value="" disabled selected>-- SELECT DEPT HEAD --</option>
+                                            <option value="chris.cantos@imerchmedia.com">SIR CHRIS CANTOS</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- 3. BUDGET VERIFIED (Finance Officer Auto-Map) -->
+                                <div class="bg-white p-4 rounded text-slate-900 border border-slate-200 flex flex-col justify-between">
+                                    <div>
+                                        <div class="text-[9px] font-black text-blue-900 uppercase">3. Budget Verified (Finance):</div>
+                                    </div>
+                                    <div class="mt-4 bg-slate-100 border border-slate-200 p-2 text-center text-[10px] font-black text-slate-500 tracking-wide uppercase">
+                                        TERESITA LUMANIOG
+                                    </div>
+                                </div>
+
+                                <!-- 4. APPROVED BY MD (Managing Director Auto-Map) -->
+                                <div class="bg-white p-4 rounded text-slate-900 border border-slate-200 flex flex-col justify-between">
+                                    <div>
+                                        <div class="text-[9px] font-black text-blue-900 uppercase">4. Approved By Managing Director:</div>
+                                    </div>
+                                    <div class="mt-4 bg-slate-100 border border-slate-200 p-2 text-center text-[10px] font-black text-slate-500 tracking-wide uppercase">
+                                        GLENN HERNANDEZ
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SUBMIT -->
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black text-xs tracking-[0.2em] py-4 rounded uppercase shadow-lg transition-all border-b-4 border-blue-800">
+                            SUBMIT FOR APPROVAL CYCLE
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- STICKY FOOTER WITH BRANDING & CORPORATE VALUES -->
+        <footer class="bg-white border-t border-slate-200 py-5 text-center mt-auto">
+            <div class="flex justify-center space-x-6 text-slate-500 text-xs font-black tracking-widest uppercase mb-2">
+                <span>💖 Love</span>
+                <span>🤝 Care</span>
+                <span>🤲 Share</span>
+                <span>🗣️ Communicate</span>
+                <span>🛡️ Trust</span>
             </div>
-        </section>
+            <p class="text-[10px] text-slate-400 font-extrabold uppercase tracking-[0.2em]">
+                Established 2026 by Ron Sarmenta
+            </p>
+        </footer>
+
     </main>
 
-    <!-- HIDDEN PRINT AREA -->
-    <div id="print-area" class="hidden"></div>
+    <!-- GLASSMORPHISM MODERN LOGIN MODAL OVERLAY -->
+    <div id="auth-modal" class="fixed inset-0 glass-bg z-[9999] flex items-center justify-center hidden">
+        <div class="glass-card w-full max-w-md p-10 rounded-2xl text-center relative overflow-hidden">
+            <!-- Subtle Radial Gradient Glow Behind Logo -->
+            <div class="absolute -top-10 -left-10 w-40 h-40 bg-blue-500/20 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-2xl"></div>
 
-    <!-- HIDDEN JPG TEMPLATE AREA FOR EXPORT -->
-    <div id="jpg-export-area" style="position: absolute; left: -9999px; top: -9999px;"></div>
+            <!-- Company Logo & Brand -->
+            <div class="relative z-10 flex flex-col items-center">
+                <img src="logo1.png" alt="iMerch Media Inc. Logo" class="h-14 w-auto mb-4 object-contain brightness-0 invert">
+                <h3 class="text-xl font-black text-white tracking-widest uppercase">IMERCH PORTAL</h3>
+                <p class="text-[9px] text-blue-400 font-extrabold tracking-[0.25em] uppercase mt-1 mb-8">Identity Verification Gate</p>
+            </div>
+            
+            <!-- Credentials Inputs -->
+            <div class="space-y-5 text-left relative z-10">
+                <div>
+                    <label class="text-[9px] font-extrabold tracking-widest text-slate-300 block mb-1">Corporate Email Address</label>
+                    <input type="text" id="login-email" placeholder="username@imerchmedia.net" style="text-transform:none;" class="w-full glass-input rounded-xl p-3 text-sm font-bold transition-all placeholder-slate-500">
+                </div>
+                <div>
+                    <label class="text-[9px] font-extrabold tracking-widest text-slate-300 block mb-1">Secure Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" style="text-transform:none;" class="w-full glass-input rounded-xl p-3 text-sm font-bold transition-all placeholder-slate-500">
+                </div>
+                <button onclick="processLogin()" class="w-full glass-btn text-white font-black text-xs tracking-[0.2em] py-4 rounded-xl uppercase shadow-lg border-b-2 border-blue-400/30 mt-2">
+                    Verify Credentials
+                </button>
+            </div>
+        </div>
+    </div>
 
+    <!-- SCRIPTS -->
+    <script>
+        // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE:
+        const APPS_SCRIPT_URL = 'YOUR_DEPLOYED_APPS_SCRIPT_URL';
+
+        function triggerLoginModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeLoginModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+        function processLogin() {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            if(email && pass) { window.loginUser(email, pass); } 
+            else { alert("All access credentials fields are required."); }
+        }
+
+        function calculateGrossTotal() {
+            const basic = parseFloat(document.getElementById('mrf-salary').value) || 0;
+            const meal = parseFloat(document.getElementById('exp-meal').value) || 0;
+            const transpo = parseFloat(document.getElementById('exp-transpo').value) || 0;
+            const load = parseFloat(document.getElementById('exp-load').value) || 0;
+            const internet = parseFloat(document.getElementById('exp-internet').value) || 0;
+            
+            const grandTotal = basic + meal + transpo + load + internet;
+            document.getElementById('gross-total-val').innerText = grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('mrf-salary').addEventListener('input', calculateGrossTotal);
+            document.querySelectorAll('.exp-calc').forEach(input => {
+                input.addEventListener('input', calculateGrossTotal);
+            });
+        });
+    </script>
+
+    <!-- FIREBASE MODULE LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, onSnapshot, doc, getDoc, updateDoc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+        import { 
+            getFirestore, collection, addDoc, query, onSnapshot, doc, getDoc, updateDoc, serverTimestamp, orderBy 
+        } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+        import { 
+            getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCdhUss3U_1j6LJDSg_n52w0x3XwRHNiPA",
@@ -370,258 +484,243 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
         window.showSection = (id) => {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-link'));
-            document.getElementById('section-' + id).classList.add('active');
-            document.getElementById('nav-' + id).classList.add('active-link');
+            const targetSection = document.getElementById('section-' + id);
+            const targetNav = document.getElementById('nav-' + id);
+            if(targetSection) targetSection.classList.add('active');
+            if(targetNav) targetNav.classList.add('active-link');
         };
 
-        // DASHBOARD REAL-TIME SYNC
-        const q = query(collection(db, "mrf_requests"), orderBy("submittedAt", "desc"));
-        onSnapshot(q, (snapshot) => {
-            const tbody = document.getElementById('pending-table-body');
-            tbody.innerHTML = '';
-            
-            if (snapshot.empty) {
-                tbody.innerHTML = '<tr><td colspan="5" class="px-8 py-20 text-center text-slate-400 font-bold uppercase tracking-widest">No Active Records Found.</td></tr>';
-                return;
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const email = user.email.toLowerCase();
+                if (email.endsWith('@imerchmedia.net') || email.endsWith('@imerchmedia.com')) {
+                    closeLoginModal();
+                    setupRealTimeSync();
+                } else {
+                    alert("Access Denied: Corporate email mismatch.");
+                    signOut(auth);
+                }
+            } else {
+                triggerLoginModal();
             }
-
-            snapshot.forEach(docSnap => {
-                const data = docSnap.data();
-                const id = docSnap.id;
-                const isApproved = data.status === "FULLY_APPROVED";
-                const statusColor = isApproved ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800";
-                
-                const actionButtons = isApproved 
-                    ? `<div class="flex justify-center space-x-2">
-                        <button onclick="printMRF('${id}')" class="bg-green-600 text-white px-4 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-black transition-all shadow-md">🖨️ PRINT</button>
-                        <button onclick="downloadJPG('${id}')" class="bg-orange-500 text-white px-4 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-black transition-all shadow-md">🖼️ JPG</button>
-                       </div>`
-                    : `<button onclick="approveCycleStep('${id}', '${data.status}')" class="bg-slate-900 text-white px-5 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-blue-700 transition-all shadow-md">SIGN RECORD</button>`;
-
-                tbody.innerHTML += `
-                    <tr class="hover:bg-blue-50/50 transition-all group">
-                        <td class="px-8 py-5 text-xs font-bold text-slate-500">${data.submittedAt?.toDate().toLocaleString() || '---'}</td>
-                        <td class="px-8 py-5 text-xs font-black text-slate-900 uppercase tracking-tight">${data.position}</td>
-                        <td class="px-8 py-5 text-xs font-bold text-slate-600">${data.department}</td>
-                        <td class="px-8 py-5">
-                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase ${statusColor} border border-current">
-                                ${data.status}
-                            </span>
-                        </td>
-                        <td class="px-8 py-5 text-center">${actionButtons}</td>
-                    </tr>`;
-            });
         });
 
-        // SHARED TEMPLATE BUILDER
-        const buildFormHTML = (d, docId) => {
-            return `
-                <div style="width: 850px; margin: 0 auto; padding: 40px; color: black; background: white; border: 2px solid black; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                    <div style="text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 20px;">
-                        <img src="logo1.png" style="height: 60px; margin-bottom: 10px;">
-                        <p style="font-size: 10px; font-weight: bold; margin: 0; text-transform: uppercase;">#493 Halcon Street, Brgy. Malamig, Mandaluyong City</p>
-                        <h1 style="background: #111827; color: white; padding: 15px; font-size: 24px; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; border: 2px solid black;">Manpower Request Form</h1>
-                    </div>
-
-                    <style>
-                        .print-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                        .print-table td { border: 1px solid black; padding: 12px; font-size: 12px; vertical-align: top; }
-                        .print-header { background: #f3f4f6; font-weight: 900; text-align: center; font-size: 11px; text-transform: uppercase; }
-                    </style>
-
-                    <table class="print-table">
-                        <tr>
-                            <td style="width: 25%;"><strong>VACANCIES:</strong><br>${d.vacancies || ''}</td>
-                            <td colspan="2"><strong>JOB POSITION:</strong><br><span style="font-size: 14px; font-weight: bold;">${d.position || ''}</span></td>
-                            <td style="width: 25%;"><strong>DEPARTMENT:</strong><br>${d.department || ''}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>APPROVED MP:</strong><br>${d.approved_mp || ''}</td>
-                            <td><strong>PRESENT MP:</strong><br>${d.present_mp || ''}</td>
-                            <td><strong>REPLACEMENT OF:</strong><br>${d.replacement_of || ''}</td>
-                            <td><strong>DATE VACANT:</strong><br>${d.date_vacant || ''}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4"><strong>REASON FOR REQUEST:</strong> <span style="font-weight: bold;">${d.reason || ''}</span></td>
-                        </tr>
-                        <tr class="print-header"><td colspan="4">TYPE OF EMPLOYMENT</td></tr>
-                        <tr>
-                            <td colspan="2"><strong>EMPLOYMENT TYPE:</strong><br>${d.emp_type || ''}</td>
-                            <td colspan="2"><strong>DURATION:</strong><br>START: ${d.start_date || '---'} | END: ${d.end_date || '---'}</td>
-                        </tr>
-                        <tr class="print-header"><td colspan="4">EDUCATIONAL ATTAINMENT</td></tr>
-                        <tr>
-                            <td colspan="2"><strong>LEVEL:</strong> ${d.educ || ''} (${d.grad_status || ''})</td>
-                            <td colspan="2"><strong>COURSE:</strong> ${d.course || ''}</td>
-                        </tr>
-                        <tr class="print-header"><td colspan="4">BUDGETED COMPENSATION PACKAGE</td></tr>
-                        <tr>
-                            <td><strong>BASIC SALARY:</strong><br><span style="color: #1d4ed8; font-weight: bold;">₱ ${d.basic || '0.00'}</span></td>
-                            <td><strong>CHARGE TO:</strong><br>${d.charge || ''}</td>
-                            <td colspan="2" rowspan="2">
-                                <strong>REIMBURSABLE EXPENSES:</strong><br>
-                                MEAL: ${d.meal || '0'} | TRANSPO: ${d.transpo || '0'}<br>
-                                COMM: ${d.comm || '0'} | INTERNET: ${d.internet || '0'}
-                                <div style="margin-top: 15px; font-size: 18px; font-weight: 900; border-top: 2px solid black; padding-top: 10px;">GROSS TOTAL: ${d.total_package || '₱ 0.00'}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>MCE NO:</strong><br>${d.mce || ''}</td>
-                            <td><strong>BUDGET:</strong><br>${d.budget || ''}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4"><strong>SPECIAL TRAININGS:</strong><br>${d.trainings || ''}</td>
-                        </tr>
-                    </table>
-
-                    <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div style="border: 1px solid black; padding: 15px; text-align: center; background: #fff;">
-                            <p style="font-size: 10px; margin: 0; font-weight: bold;">1. REQUESTED BY (SUPERVISOR)</p>
-                            <img src="${d.sig_supervisor}" style="height: 60px; margin: 5px auto; display: block;">
-                            <p style="font-weight: 900; border-top: 1px solid black; display: inline-block; padding: 5px 20px; font-size: 11px;">${d.supervisor_email.toUpperCase()}</p>
-                        </div>
-                        <div style="border: 1px solid black; padding: 15px; text-align: center; background: #fff;">
-                            <p style="font-size: 10px; margin: 0; font-weight: bold;">2. NOTED BY (DEPT. HEAD)</p>
-                            <div style="height: 60px; font-style: italic; line-height: 60px; color: blue; font-weight: bold;">e-Signed via Portal</div>
-                            <p style="font-weight: 900; border-top: 1px solid black; display: inline-block; padding: 5px 20px; font-size: 11px;">CHRISTOPHER CANTOS</p>
-                        </div>
-                        <div style="border: 1px solid black; padding: 15px; text-align: center; background: #fff;">
-                            <p style="font-size: 10px; margin: 0; font-weight: bold;">3. BUDGET VERIFIED (FINANCE)</p>
-                            <div style="height: 60px; font-style: italic; line-height: 60px; color: green; font-weight: bold;">Verified via Dashboard</div>
-                            <p style="font-weight: 900; border-top: 1px solid black; display: inline-block; padding: 5px 20px; font-size: 11px;">TERESITA LUMANIOG</p>
-                        </div>
-                        <div style="border: 1px solid black; padding: 15px; text-align: center; background: #fff;">
-                            <p style="font-size: 10px; margin: 0; font-weight: bold;">4. APPROVED BY (MANAGING DIRECTOR)</p>
-                            <div style="height: 60px; font-style: italic; line-height: 60px; color: red; font-weight: bold;">Final Approval Logged</div>
-                            <p style="font-weight: 900; border-top: 1px solid black; display: inline-block; padding: 5px 20px; font-size: 11px;">GLENN HERNANDEZ</p>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 25px; font-size: 10px; color: #4b5563; text-align: left; border-top: 1px dashed #ccc; padding-top: 10px;">
-                        <strong>System Generated Record:</strong> ${docId} | <strong>Timestamp:</strong> ${new Date().toLocaleString()}
-                    </div>
-                </div>
-            `;
+        window.loginUser = async (email, password) => {
+            try {
+                const lowerEmail = email.toLowerCase();
+                if (!lowerEmail.endsWith('@imerchmedia.net') && !lowerEmail.endsWith('@imerchmedia.com')) {
+                    alert("Authorized domain match rejected.");
+                    return;
+                }
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) { alert("Security Reject: " + error.message); }
         };
 
-        // PRINT FUNCTION LOGIC
-        window.printMRF = async (docId) => {
-            const docRef = doc(db, "mrf_requests", docId);
-            const docSnap = await getDoc(docRef);
-            if (!docSnap.exists()) return alert("Record not found!");
-            
-            const printArea = document.getElementById('print-area');
-            printArea.innerHTML = buildFormHTML(docSnap.data(), docId);
+        window.logoutUser = () => { signOut(auth).then(() => { window.location.reload(); }); };
 
-            setTimeout(() => { window.print(); }, 500);
-        };
-
-        // NEW JPG DOWNLOAD LOGIC
-        window.downloadJPG = async (docId) => {
-            const docRef = doc(db, "mrf_requests", docId);
-            const docSnap = await getDoc(docRef);
-            if (!docSnap.exists()) return alert("Record not found!");
-
-            const exportArea = document.getElementById('jpg-export-area');
-            exportArea.innerHTML = buildFormHTML(docSnap.data(), docId);
+        document.getElementById('mrf-form-element').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const currentUser = auth.currentUser;
+            if(!currentUser) return alert("Expired Session Context.");
 
             try {
-                // Render with html2canvas
-                const canvas = await html2canvas(exportArea.firstElementChild, {
-                    scale: 2, // Higher resolution
-                    useCORS: true,
-                    logging: false,
-                    backgroundColor: "#ffffff"
+                const reasonRadio = document.querySelector('input[name="reason"]:checked').value;
+                const typeRadio = document.querySelector('input[name="type"]:checked').value;
+                const eduLevel = document.querySelector('input[name="edu-level"]:checked').value;
+                const eduStatus = document.querySelector('input[name="edu-status"]:checked').value;
+                const chargeTo = document.querySelector('input[name="charge-to"]:checked').value;
+
+                const selectedSupervisorEmail = document.getElementById('mrf-supervisor-email').value;
+                const dropdownElement = document.getElementById('mrf-supervisor-email');
+                const selectedSupervisorName = dropdownElement.options[dropdownElement.selectedIndex].text;
+                
+                const targetDeptEmail = document.getElementById('mrf-dept-email').value.trim().toLowerCase();
+                const reqPosition = document.getElementById('mrf-position').value.toUpperCase();
+                const reqDept = document.getElementById('mrf-department').value.toUpperCase();
+                const reqQty = document.getElementById('mrf-qty').value;
+                const salaryVal = document.getElementById('mrf-salary').value || "0";
+
+                await addDoc(collection(db, "mrf_requests"), {
+                    supervisor_name: selectedSupervisorName,
+                    supervisor_email: selectedSupervisorEmail,
+                    qty: reqQty,
+                    position: reqPosition,
+                    department: reqDept,
+                    approvedManpower: document.getElementById('mrf-approved-mp').value || "0",
+                    presentManpower: document.getElementById('mrf-present-mp').value || "0",
+                    replacementOf: document.getElementById('mrf-replacement-of').value.toUpperCase() || "N/A",
+                    dateVacant: document.getElementById('mrf-date-vacant').value || "",
+                    reasonForRequest: reasonRadio,
+                    employmentType: typeRadio,
+                    durationStart: document.getElementById('mrf-duration-start').value || "",
+                    durationEnd: document.getElementById('mrf-duration-end').value || "",
+                    educationalLevel: eduLevel,
+                    educationalStatus: eduStatus,
+                    course: document.getElementById('mrf-course').value.toUpperCase() || "N/A",
+                    salaryPackage: salaryVal,
+                    expMeal: document.getElementById('exp-meal').value || "0",
+                    expTranspo: document.getElementById('exp-transpo').value || "0",
+                    expLoad: document.getElementById('exp-load').value || "0",
+                    expInternet: document.getElementById('exp-internet').value || "0",
+                    chargeTo: chargeTo,
+                    trainingRequired: document.getElementById('mrf-training').value.toUpperCase() || "NONE",
+                    profilePreference: document.getElementById('mrf-pref-profile').value.toUpperCase() || "ANY",
+                    
+                    requestor_email: currentUser.email.toLowerCase(),
+                    dept_head_email: targetDeptEmail,
+                    status: "SUBMITTED",
+                    submittedAt: serverTimestamp()
                 });
 
-                const link = document.createElement('a');
-                link.download = `MRF-${docId}.jpg`;
-                link.href = canvas.toDataURL("image/jpeg", 0.9);
-                link.click();
-            } catch (err) {
-                alert("Export Failed: " + err.message);
-            } finally {
-                exportArea.innerHTML = ''; // Cleanup
-            }
-        };
+                if (APPS_SCRIPT_URL !== 'YOUR_DEPLOYED_APPS_SCRIPT_URL') {
+                    fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: "SUBMITTED",
+                            dept_head_email: targetDeptEmail,
+                            position: reqPosition,
+                            department: reqDept,
+                            qty: reqQty,
+                            employmentType: typeRadio,
+                            salaryPackage: salaryVal,
+                            requestor_email: currentUser.email.toLowerCase()
+                        })
+                    }).catch(err => console.log("Mail Gateway trigger delayed."));
+                }
 
-        // APPROVAL CYCLE LOGIC
-        window.approveCycleStep = async (docId, currentStatus) => {
-            const pin = prompt(`APPROVING STEP: ${currentStatus}\nEnter Authorization Key:`);
-            if (pin !== "1234") return alert("Unauthorized Key.");
-
-            const docRef = doc(db, "mrf_requests", docId);
-            let nextStatus = "";
-            let updatePayload = {};
-
-            if (currentStatus === "WAITING_DEPT_HEAD") {
-                nextStatus = "WAITING_FINANCE";
-                updatePayload = { status: nextStatus, notedAt: serverTimestamp() };
-            } else if (currentStatus === "WAITING_FINANCE") {
-                nextStatus = "WAITING_MD";
-                updatePayload = { status: nextStatus, verifiedAt: serverTimestamp() };
-            } else if (currentStatus === "WAITING_MD") {
-                nextStatus = "FULLY_APPROVED";
-                updatePayload = { status: nextStatus, approvedAt: serverTimestamp() };
-            } else {
-                return alert("Record already processed.");
-            }
-
-            try {
-                await updateDoc(docRef, updatePayload);
-                alert(`SUCCESS: Status updated to ${nextStatus}.`);
-            } catch (err) { alert("UPDATE FAILED: " + err.message); }
-        };
-
-        // SIGNATURE PAD INITIALIZATION
-        const canvas = document.getElementById('sig-supervisor');
-        window.padSup = new SignaturePad(canvas);
-
-        // REAL-TIME BUDGET CALCULATOR
-        const calculateTotal = () => {
-            const basic = parseFloat(document.getElementById('basic').value) || 0;
-            const meal = parseFloat(document.getElementsByName('meal')[0].value) || 0;
-            const transpo = parseFloat(document.getElementsByName('transpo')[0].value) || 0;
-            const comm = parseFloat(document.getElementsByName('comm')[0].value) || 0;
-            const internet = parseFloat(document.getElementsByName('internet')[0].value) || 0;
-            
-            const total = basic + meal + transpo + comm + internet;
-            document.getElementById('total').value = "₱ " + total.toLocaleString(undefined, {minimumFractionDigits: 2});
-        };
-
-        document.querySelectorAll('.calc').forEach(input => {
-            input.addEventListener('input', calculateTotal);
+                alert("Manpower requisition form has successfully entered the workflow loop and email alert sent.");
+                document.getElementById('mrf-form-element').reset();
+                document.getElementById('gross-total-val').innerText = "0.00";
+                window.showSection('dashboard');
+            } catch(err) { alert("Database push failed: " + err.message); }
         });
 
-        // FORM SUBMISSION
-        document.getElementById('mrfForm').onsubmit = async (e) => {
-            e.preventDefault();
-            if (padSup.isEmpty()) return alert("Please provide supervisor signature.");
+        function setupRealTimeSync() {
+            const q = query(collection(db, "mrf_requests"), orderBy("submittedAt", "desc"));
+            onSnapshot(q, (snapshot) => {
+                const tbody = document.getElementById('pending-table-body');
+                if(!tbody) return;
+                tbody.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="px-8 py-20 text-center text-slate-400 font-bold uppercase tracking-widest">No Active Records Found.</td></tr>';
+                    return;
+                }
 
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData.entries());
-            
-            data.reason = Array.from(document.querySelectorAll('input[name="reason"]:checked')).map(cb => cb.value).join(', ');
-            data.emp_type = Array.from(document.querySelectorAll('input[name="emp_type"]:checked')).map(cb => cb.value).join(', ');
-            data.educ = Array.from(document.querySelectorAll('input[name="educ"]:checked')).map(cb => cb.value).join(', ');
-            data.grad_status = Array.from(document.querySelectorAll('input[name="grad_status"]:checked')).map(cb => cb.value).join(', ');
-            data.charge = Array.from(document.querySelectorAll('input[name="charge"]:checked')).map(cb => cb.value).join(', ');
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    const isApproved = data.status === "FULLY_APPROVED";
+                    let statusColor = "bg-blue-100 text-blue-800 border-blue-300";
+                    
+                    if (isApproved) {
+                        statusColor = "bg-green-100 text-green-800 border-green-300";
+                    } else if (data.status === "APPROVED_BY_SUPERVISOR") {
+                        statusColor = "bg-yellow-100 text-yellow-800 border-yellow-300";
+                    } else if (data.status === "NOTED_BY_DEPT_HEAD") {
+                        statusColor = "bg-purple-100 text-purple-800 border-purple-300";
+                    } else if (data.status === "VERIFIED_BY_FINANCE") {
+                        statusColor = "bg-indigo-100 text-indigo-800 border-indigo-300";
+                    }
 
-            data.sig_supervisor = padSup.toDataURL();
-            data.status = "WAITING_DEPT_HEAD";
-            data.submittedAt = serverTimestamp();
+                    const actionButtons = isApproved 
+                        ? `<span class="text-xs font-black text-green-600 tracking-wider">🔒 FULLY COMPLETE</span>`
+                        : `<button onclick="approveCycleStep('${id}', '${data.status}')" class="bg-slate-900 text-white px-5 py-2 rounded-lg font-black text-[10px] tracking-widest hover:bg-blue-700 transition-all shadow-md">SIGN RECORD</button>`;
 
-            try {
-                await addDoc(collection(db, "mrf_requests"), data);
-                alert("SUCCESS: MRF Submitted to Approval Cycle!");
-                e.target.reset();
-                padSup.clear();
-                showSection('dashboard');
-            } catch (err) { alert("Error: " + err.message); }
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-blue-50/50 transition-all group">
+                            <td class="px-8 py-5 text-xs font-bold text-slate-500">${data.submittedAt?.toDate().toLocaleString() || '---'}</td>
+                            <td class="px-8 py-5 text-xs font-black text-slate-900 uppercase tracking-tight">${data.position || 'N/A'}</td>
+                            <td class="px-8 py-5 text-xs font-bold text-slate-600">${data.department || 'N/A'}</td>
+                            <td class="px-8 py-5">
+                                <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase ${statusColor} border">
+                                    ${data.status}
+                                </span>
+                            </td>
+                            <td class="px-8 py-5 text-center">${actionButtons}</td>
+                        </tr>`;
+                });
+            });
+        }
+
+        window.approveCycleStep = async (docId, currentStatus) => {
+            const currentUser = auth.currentUser;
+            if (!currentUser) return alert("Session expired.");
+
+            const docRef = doc(db, "mrf_requests", docId);
+            const docSnap = await getDoc(docRef);
+            if (!docSnap.exists()) return alert("Record missing.");
+            const data = docSnap.data();
+
+            const userEmail = currentUser.email.toLowerCase();
+            let nextStatus = "";
+            let emailActionType = "";
+
+            // 1. SUPERVISOR STAGE (Verify match with selected supervisor email)
+            if (currentStatus === "SUBMITTED") {
+                if (userEmail === data.supervisor_email.toLowerCase()) {
+                    nextStatus = "APPROVED_BY_SUPERVISOR";
+                    emailActionType = "APPROVED_BY_SUPERVISOR";
+                    await updateDoc(docRef, { status: nextStatus, supervisorSignedAt: serverTimestamp() });
+                    alert("Stage 1 complete: Form signed & approved by Supervisor.");
+                } else {
+                    return alert("Access Denied: Only the designated Supervisor (" + data.supervisor_name + ") can sign this request.");
+                }
+                
+            // 2. DEPT HEAD STAGE (Sir Chris Cantos)
+            } else if (currentStatus === "APPROVED_BY_SUPERVISOR") {
+                if (userEmail === data.dept_head_email.toLowerCase()) {
+                    nextStatus = "NOTED_BY_DEPT_HEAD";
+                    emailActionType = "NOTED_BY_DEPT_HEAD";
+                    await updateDoc(docRef, { status: nextStatus, deptHeadSignedAt: serverTimestamp() });
+                    alert("Stage 2 complete: Form noted by Department Head.");
+                } else {
+                    return alert("Access Denied: Only the designated Dept Head can sign this request.");
+                }
+                
+            // 3. FINANCE STAGE (Teresita Lumaniog)
+            } else if (currentStatus === "NOTED_BY_DEPT_HEAD") {
+                if (userEmail === "teresita.lumaniog@imerchmedia.com" || userEmail === "teresita.lumaniog@imerchmedia.net") {
+                    nextStatus = "VERIFIED_BY_FINANCE";
+                    emailActionType = "VERIFIED_BY_FINANCE";
+                    await updateDoc(docRef, { status: nextStatus, financeVerifiedAt: serverTimestamp() });
+                    alert("Stage 3 complete: Finance verification locked.");
+                } else {
+                    return alert("Access Denied: Only the Finance Department (Teresita Lumaniog) can sign this request.");
+                }
+                
+            // 4. MANAGING DIRECTOR STAGE (Sir Glenn Hernandez)
+            } else if (currentStatus === "VERIFIED_BY_FINANCE") {
+                if (userEmail === "glenn@imerchmedia.com" || userEmail === "glenn@imerchmedia.net" || userEmail === "glenn.hernandez@imerchmedia.com" || userEmail === "glenn.hernandez@imerchmedia.net") {
+                    nextStatus = "FULLY_APPROVED";
+                    await updateDoc(docRef, { status: nextStatus, mdApprovedAt: serverTimestamp() });
+                    alert("Stage 4 complete: Final authorization certified by Managing Director Sir Glenn.");
+                } else {
+                    return alert("Access Denied: Only Managing Director Sir Glenn Hernandez can sign this request.");
+                }
+            } else {
+                return alert("Workflow Error: Invalid action role state.");
+            }
+
+            if (emailActionType !== "" && APPS_SCRIPT_URL !== 'YOUR_DEPLOYED_APPS_SCRIPT_URL') {
+                fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: emailActionType,
+                        position: data.position,
+                        department: data.department
+                    })
+                }).catch(err => console.log("Pipeline routing alert cached."));
+            }
         };
     </script>
 </body>
