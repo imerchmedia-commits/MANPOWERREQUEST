@@ -46,11 +46,22 @@
         }
         
         /* Glassmorphism Classes for Login */
-       .glass-bg {
-    background-image: url('background_2.png'); /* Siguraduhin na ang image file ay nasa root directory mo */
+      .glass-bg {
+    /* Baguhin ang position para maging fixed sa buong screen */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999; /* Siguraduhin na ito ang pinaka-ibabaw */
+    
+    /* I-apply ang iyong background image dito */
+    background-image: url('background.png'); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    
+    /* Center ang modal */
     display: flex;
     align-items: center;
     justify-content: center;
