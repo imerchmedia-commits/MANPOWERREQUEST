@@ -464,7 +464,7 @@
     <!-- SCRIPTS -->
     <script>
         // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE:
-        const APPS_SCRIPT_URL = 'YOUR_DEPLOYED_APPS_SCRIPT_URL';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzU8LcnmCnmZjqoQBbzFTSgW-MbPIB98kcnsnJBiTqNh5MGLZ1PLJMiYRSIASeFtwqJ/exec';
 
         function triggerLoginModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
         function closeLoginModal() { document.getElementById('auth-modal').classList.add('hidden'); }
@@ -608,7 +608,7 @@
                     submittedAt: serverTimestamp()
                 });
 
-                if (APPS_SCRIPT_URL !== 'YOUR_DEPLOYED_APPS_SCRIPT_URL') {
+                if (APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbzU8LcnmCnmZjqoQBbzFTSgW-MbPIB98kcnsnJBiTqNh5MGLZ1PLJMiYRSIASeFtwqJ/exec') {
                     fetch(APPS_SCRIPT_URL, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -740,7 +740,7 @@
                 return alert("Workflow Error: Invalid action role state.");
             }
 
-            if (emailActionType !== "" && APPS_SCRIPT_URL !== 'YOUR_DEPLOYED_APPS_SCRIPT_URL') {
+            if (emailActionType !== "" && APPS_SCRIPT_URL !== 'https://script.google.com/macros/s/AKfycbzU8LcnmCnmZjqoQBbzFTSgW-MbPIB98kcnsnJBiTqNh5MGLZ1PLJMiYRSIASeFtwqJ/exec') {
                 fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
